@@ -594,22 +594,17 @@ Troves is a yield aggregator on Starknet that maximizes returns through automate
 
     const decimal = decimals[vaultType] || 18;
 
-    // Convert from wei/smallest unit to human readable format
     const divisor = BigInt(10 ** decimal);
     const wholePart = balanceNum / divisor;
     const fractionalPart = balanceNum % divisor;
 
-    // Format fractional part with leading zeros
     const fractionalStr = fractionalPart.toString().padStart(decimal, '0');
-
-    // Remove trailing zeros from fractional part
     const trimmedFractional = fractionalStr.replace(/0+$/, '');
 
     if (trimmedFractional === '') {
       return wholePart.toString();
     }
 
-    // Format with proper decimal places (up to 6 decimal places)
     const formattedFractional = trimmedFractional.slice(0, 6);
 
     return `${wholePart}.${formattedFractional}`;

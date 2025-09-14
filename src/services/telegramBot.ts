@@ -6,12 +6,13 @@ import TelegramBot from 'node-telegram-bot-api';
 import { config } from '../config';
 import { AIService } from './aiService';
 import { ContractService } from './contractService';
+import { MessagingPlatform } from '../types/messaging';
 
-export class TelegramBotService {
+export class TelegramBotService implements MessagingPlatform {
   private bot: TelegramBot;
   private aiService: AIService;
   private contractService: ContractService;
-  private isRunning: boolean = false;
+  private _isRunning: boolean = false;
 
   constructor() {
     this.bot = new TelegramBot(config.telegram.botToken, { polling: true });
@@ -310,12 +311,12 @@ Use /help for more information.
    * Start the bot
    */
   start(): void {
-    if (this.isRunning) {
+    if (this._isRunning) {
       console.log('Bot is already running');
       return;
     }
 
-    this.isRunning = true;
+    this._isRunning = true;
     console.log('🤖 Telegram bot started successfully');
     console.log('📱 Bot is ready to receive messages');
   }
@@ -324,25 +325,66 @@ Use /help for more information.
    * Stop the bot
    */
   stop(): void {
-    if (!this.isRunning) {
+    if (!this._isRunning) {
       console.log('Bot is not running');
       return;
     }
 
     this.bot.stopPolling();
-    this.isRunning = false;
+    this._isRunning = false;
     console.log('🛑 Telegram bot stopped');
   }
 
   /**
    * Send message to specific chat
    */
-  async sendMessage(chatId: number, message: string): Promise<void> {
+  async sendMessage(
+    chatId: string | number,
+    message: string,
+    options?: any
+  ): Promise<void> {
     try {
-      await this.bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+      await this.bot.sendMessage(chatId, message, {
+        parse_mode: 'Markdown',
+        ...options,
+      });
     } catch (error) {
       console.error('Error sending message:', error);
     }
+  }
+
+  /**
+   * Send photo to specific chat
+   */
+  async sendPhoto(
+    chatId: string | number,
+    photoUrl: string,
+    caption?: string
+  ): Promise<void> {
+    try {
+      await this.bot.sendPhoto(chatId, photoUrl, {
+        caption,
+        parse_mode: 'Markdown',
+      });
+    } catch (error) {
+      console.error('Error sending photo:', error);
+      // Fallback to sending URL as text
+      await this.sendMessage(chatId, `📸 ${caption || 'Image'}: ${photoUrl}`);
+    }
+  }
+
+  /**
+   * Check if bot is running
+   */
+  isRunning(): boolean {
+    return this._isRunning;
+  }
+
+  /**
+   * Get platform name
+   */
+  getPlatformName(): string {
+    return 'telegram';
   }
 
   /**

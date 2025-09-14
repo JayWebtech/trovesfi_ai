@@ -14,6 +14,14 @@ export const config = {
     botToken: process.env.TELEGRAM_BOT_TOKEN || '',
     webhookUrl: process.env.TELEGRAM_WEBHOOK_URL || '',
   },
+  whatsapp: {
+    accessToken: process.env.WHATSAPP_ACCESS_TOKEN || '',
+    phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID || '',
+    businessAccountId: process.env.WHATSAPP_BUSINESS_ACCOUNT_ID || '',
+    webhookVerifyToken: process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN || '',
+    apiVersion: process.env.WHATSAPP_API_VERSION || 'v17.0',
+    baseUrl: 'https://graph.facebook.com',
+  },
   anthropic: {
     apiKey: process.env.ANTHROPIC_API_KEY || '',
   },

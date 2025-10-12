@@ -4,7 +4,7 @@
   "description": "A Node.js TypeScript project",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r public dist/",
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node src/index.ts",
     "watch": "tsc --watch",

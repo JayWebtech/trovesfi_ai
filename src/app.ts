@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
+import path from 'path';
 import { config } from './config';
 import { specs } from './config/swagger';
 import trovesRoutes from './routes/troves';
@@ -28,6 +29,14 @@ app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static files (privacy policy, etc.)
+app.use('/public', express.static(path.join(__dirname, '../public')));
+
+// Privacy Policy route (required for WhatsApp Business API)
+app.get('/privacy-policy', (_, res) => {
+  res.sendFile(path.join(__dirname, '../public/privacy-policy.html'));
+});
 
 app.get('/health', (_, res) => {
   return res.status(200).json({

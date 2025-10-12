@@ -50,8 +50,8 @@ Use /help for more information.`;
       const chatId = msg.chat.id;
       try {
         const helpMessage = await this.aiService.getHelpMessage();
-        const sanitizedHelp = this.sanitizeForTelegram(helpMessage);
-        this.bot.sendMessage(chatId, sanitizedHelp);
+        const formattedHelp = this.convertToTelegramHTML(helpMessage);
+        this.bot.sendMessage(chatId, formattedHelp, { parse_mode: 'HTML' });
       } catch (error) {
         console.error('Error getting help message:', error);
         this.bot.sendMessage(
@@ -203,10 +203,11 @@ Portfolio Value:
         const userId = msg.from?.id?.toString() || 'anonymous';
         const response = await this.aiService.processQuery(userMessage, userId);
 
-        // Sanitize message to remove markdown formatting
-        const sanitizedMessage = this.sanitizeForTelegram(response.message);
+        // Convert markdown to HTML for proper formatting
+        const formattedMessage = this.convertToTelegramHTML(response.message);
 
-        await this.bot.sendMessage(chatId, sanitizedMessage, {
+        await this.bot.sendMessage(chatId, formattedMessage, {
+          parse_mode: 'HTML',
           disable_web_page_preview: true,
         });
 
@@ -302,23 +303,28 @@ Portfolio Value:
   }
 
   /**
-   * Sanitize message for Telegram to avoid Markdown parsing errors
-   * Removes markdown formatting since we're no longer using emojis
+   * Convert markdown to HTML for Telegram
+   * HTML mode is more reliable than Markdown and supports formatting without parsing errors
    */
-  private sanitizeForTelegram(message: string): string {
-    // Remove bold markdown (**text** -> text)
-    let sanitized = message.replace(/\*\*(.*?)\*\*/g, '$1');
+  private convertToTelegramHTML(message: string): string {
+    // Convert **bold** to <b>bold</b>
+    let formatted = message.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
     
-    // Remove italic markdown (_text_ -> text)
-    sanitized = sanitized.replace(/_(.*?)_/g, '$1');
+    // Convert _italic_ to <i>italic</i>
+    formatted = formatted.replace(/_(.*?)_/g, '<i>$1</i>');
     
-    // Remove code blocks (```text``` -> text)
-    sanitized = sanitized.replace(/```(.*?)```/gs, '$1');
+    // Convert `code` to <code>code</code>
+    formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
     
-    // Remove inline code (`text` -> text) but keep contract addresses readable
-    sanitized = sanitized.replace(/`([^`]+)`/g, '$1');
+    // Convert ```code blocks``` to <pre>code</pre>
+    formatted = formatted.replace(/```(.*?)```/gs, '<pre>$1</pre>');
     
-    return sanitized;
+    // Escape special HTML characters (except our tags)
+    formatted = formatted.replace(/&(?!(?:lt|gt|amp|quot|#\d+);)/g, '&amp;');
+    formatted = formatted.replace(/<(?!\/?(b|i|code|pre|a)(?:\s|>))/g, '&lt;');
+    formatted = formatted.replace(/(?<!<\/?(b|i|code|pre|a)(?:\s[^>]*)?)>/g, '&gt;');
+    
+    return formatted;
   }
 
   /**
@@ -358,8 +364,9 @@ Portfolio Value:
     options?: any
   ): Promise<void> {
     try {
-      const sanitizedMessage = this.sanitizeForTelegram(message);
-      await this.bot.sendMessage(chatId, sanitizedMessage, {
+      const formattedMessage = this.convertToTelegramHTML(message);
+      await this.bot.sendMessage(chatId, formattedMessage, {
+        parse_mode: 'HTML',
         ...options,
       });
     } catch (error) {
@@ -376,9 +383,10 @@ Portfolio Value:
     caption?: string
   ): Promise<void> {
     try {
-      const sanitizedCaption = caption ? this.sanitizeForTelegram(caption) : undefined;
+      const formattedCaption = caption ? this.convertToTelegramHTML(caption) : undefined;
       await this.bot.sendPhoto(chatId, photoUrl, {
-        caption: sanitizedCaption,
+        caption: formattedCaption,
+        parse_mode: 'HTML',
       });
     } catch (error) {
       console.error('Error sending photo:', error);

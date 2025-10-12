@@ -87,6 +87,28 @@ export class AIService {
       },
     },
     {
+      name: 'calculate_investment_returns',
+      description: 'Calculate potential returns for an investment in a specific strategy over a time period',
+      input_schema: {
+        type: 'object',
+        properties: {
+          strategy_id: {
+            type: 'string',
+            description: 'Strategy ID (e.g., "evergreen_strk", "hyper_xstrk")',
+          },
+          amount_usd: {
+            type: 'number',
+            description: 'Investment amount in USD',
+          },
+          time_period_years: {
+            type: 'number',
+            description: 'Time period in years (default 1)',
+          },
+        },
+        required: ['strategy_id', 'amount_usd'],
+      },
+    },
+    {
       name: 'get_vault_balance',
       description: 'Get user balance for a specific vault/strategy and wallet address',
       input_schema: {
@@ -213,6 +235,7 @@ IMPORTANT GUIDELINES:
 - Include relevant image URLs from the knowledge base when helpful
 - When users ask about strategies, use the strategy tools to fetch live data from the API
 - All strategy information (APY, TVL, contract addresses) is fetched dynamically
+- For investment calculations or "how much can I make" questions, use calculate_investment_returns tool
 - If user asks for balance, they need to provide both wallet address AND strategy ID
 - For general questions, provide helpful information from the knowledge base
 
@@ -221,6 +244,7 @@ AVAILABLE TOOLS:
 - get_strategy_by_id: Get detailed info about a specific strategy
 - search_strategies_by_token: Find strategies for a specific token (ETH, STRK, USDC, etc.)
 - get_top_strategies_by_apy: Show strategies with highest yields
+- calculate_investment_returns: Calculate potential returns for an investment (amount, time period)
 - get_vault_balance: Check user balance (requires wallet address + strategy ID)
 - get_vault_yield: Get yield data for a strategy
 - get_vault_tvl: Get TVL for a strategy
@@ -313,6 +337,8 @@ Knowledge Base: ${this.getTrovesContext()}`;
           return await this.searchStrategiesByToken(parameters);
         case 'get_top_strategies_by_apy':
           return await this.getTopStrategiesByApy(parameters);
+        case 'calculate_investment_returns':
+          return await this.calculateInvestmentReturns(parameters);
         case 'get_vault_balance':
           return await this.getVaultBalance(parameters);
         case 'get_vault_yield':
@@ -367,7 +393,7 @@ Knowledge Base: ${this.getTrovesContext()}`;
 
       return {
         success: true,
-        message: `**Available Strategies** (${strategies.length}):\n\n${formattedStrategies}\n\nUse strategy ID to get more details (e.g., "Tell me about ${strategies[0]?.id}")`,
+        message: `\n\n**Available Strategies** (${strategies.length}):\n\n${formattedStrategies}\n\nUse strategy ID to get more details (e.g., "Tell me about ${strategies[0]?.id}")`,
         data: { strategies, count: strategies.length },
       };
     } catch (error) {
@@ -392,7 +418,7 @@ Knowledge Base: ${this.getTrovesContext()}`;
       if (!strategy) {
         return {
           success: false,
-          message: `Strategy with ID '${strategy_id}' not found. Use "show all strategies" to see available options.`,
+          message: `\n\nStrategy with ID '${strategy_id}' not found. Use "show all strategies" to see available options.`,
         };
       }
 
@@ -445,7 +471,7 @@ Knowledge Base: ${this.getTrovesContext()}`;
 
       return {
         success: true,
-        message: `**${strategies.length} Strategies with ${token_symbol.toUpperCase()}**:\n\n${formattedStrategies}\n\nAsk "Tell me about [strategy_id]" for full details including APY methodology.`,
+        message: `\n\n**${strategies.length} Strategies with ${token_symbol.toUpperCase()}**:\n\n${formattedStrategies}\n\nAsk "Tell me about [strategy_id]" for full details including APY methodology.`,
         data: { strategies, count: strategies.length, token: token_symbol.toUpperCase() },
       };
     } catch (error) {
@@ -483,13 +509,122 @@ Knowledge Base: ${this.getTrovesContext()}`;
 
       return {
         success: true,
-        message: `**Top ${strategies.length} Strategies by APY**:\n\n${formattedStrategies}\n\nAsk "Tell me about [strategy_id]" for full details including APY methodology.`,
+        message: `\n**Top ${strategies.length} Strategies by APY**:\n\n${formattedStrategies}\n\nAsk "Tell me about [strategy_id]" for full details including APY methodology.`,
         data: { strategies, count: strategies.length },
       };
     } catch (error) {
       return {
         success: false,
         message: `Error fetching top APY strategies: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      };
+    }
+  }
+
+  /**
+   * Calculate investment returns
+   */
+  async calculateInvestmentReturns({
+    strategy_id,
+    amount_usd,
+    time_period_years = 1,
+  }: {
+    strategy_id: string;
+    amount_usd: number;
+    time_period_years?: number;
+  }): Promise<{ success: boolean; message: string; data?: any }> {
+    try {
+      if (!strategy_id) {
+        return {
+          success: false,
+          message: 'Strategy ID is required for investment calculation.',
+        };
+      }
+
+      if (!amount_usd || amount_usd <= 0) {
+        return {
+          success: false,
+          message: 'Investment amount must be greater than 0.',
+        };
+      }
+
+      // Fetch strategy details
+      const strategy = await this.strategyService.getStrategyById(strategy_id);
+      
+      if (!strategy) {
+        return {
+          success: false,
+          message: `Strategy '${strategy_id}' not found.`,
+        };
+      }
+
+      if (strategy.apy === null || isNaN(strategy.apy)) {
+        return {
+          success: false,
+          message: `APY data not available for ${strategy.name}.`,
+        };
+      }
+
+      // Calculate returns
+      const apy = strategy.apy;
+      const grossYield = amount_usd * apy * time_period_years;
+      const performanceFee = grossYield * 0.10; // 10% fee on gains
+      const netProfit = grossYield - performanceFee;
+      const finalValue = amount_usd + netProfit;
+      const netAPY = (netProfit / amount_usd) / time_period_years;
+
+      // Format currency
+      const fmt = (n: number) => new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(n);
+
+      let message = `**Investment Calculation for ${strategy.name}**\n\n`;
+      message += `**Strategy Details:**\n`;
+      message += `- Current APY: ${this.strategyService.formatApy(strategy.apy)}\n`;
+      message += `- Risk Factor: ${strategy.riskFactor}\n`;
+      message += `- Leverage: ${strategy.leverage}x\n`;
+      message += `- Audit Status: ${strategy.isAudited ? '[Audited]' : '[Not Audited]'}\n\n`;
+      
+      message += `**Your Investment:**\n`;
+      message += `- Initial Amount: ${fmt(amount_usd)}\n`;
+      message += `- Time Period: ${time_period_years} year${time_period_years > 1 ? 's' : ''}\n\n`;
+      
+      message += `**Projected Returns:**\n`;
+      message += `- Gross Yield (${this.strategyService.formatApy(strategy.apy)}): ${fmt(grossYield)}\n`;
+      message += `- Performance Fee (10%): -${fmt(performanceFee)}\n`;
+      message += `- Net Profit: ${fmt(netProfit)}\n`;
+      message += `- **Final Value: ${fmt(finalValue)}**\n`;
+      message += `- **Net ROI: ${(netAPY * 100).toFixed(2)}%**\n\n`;
+      
+      message += `**Important Notes:**\n`;
+      message += `- APY is variable and changes with market conditions\n`;
+      message += `- Performance fee applies to gains only (not principal)\n`;
+      message += `- Past performance doesn't guarantee future results\n`;
+      message += `- Current APY: ${this.strategyService.formatApy(strategy.apy)}\n\n`;
+      
+      message += `**Methodology:**\n${strategy.apyMethodology}`;
+
+      return {
+        success: true,
+        message,
+        data: {
+          strategy_id,
+          strategy,
+          investment: amount_usd,
+          time_period_years,
+          gross_yield: grossYield,
+          performance_fee: performanceFee,
+          net_profit: netProfit,
+          final_value: finalValue,
+          net_roi: netAPY,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error calculating returns: ${error instanceof Error ? error.message : 'Unknown error'}`,
       };
     }
   }
@@ -539,7 +674,7 @@ Knowledge Base: ${this.getTrovesContext()}`;
 
       return {
         success: true,
-        message: `**Your ${strategy.name} Balance:**\n${formattedBalance}\n\nAddress: ${wallet_address}`,
+        message: `\n\n**Your ${strategy.name} Balance:**\n${formattedBalance}\n\nAddress: ${wallet_address}`,
         data: { balance, formattedBalance, strategy_id, wallet_address, strategy },
       };
     } catch (error) {
@@ -576,8 +711,6 @@ Knowledge Base: ${this.getTrovesContext()}`;
         };
       }
 
-      const yieldData = await this.contractService.computeYield(strategy_id);
-
       let message = `**${strategy.name} Yield Information:**\n\n`;
       message += `- Current APY: ${this.strategyService.formatApy(strategy.apy)}\n`;
       
@@ -587,15 +720,25 @@ Knowledge Base: ${this.getTrovesContext()}`;
       if (strategy.apySplit.rewardsApy > 0) {
         message += `- Rewards APY: ${this.strategyService.formatApy(strategy.apySplit.rewardsApy)}\n`;
       }
+
+      // Try to fetch on-chain yield data, but don't fail if contract doesn't support it
+      try {
+        const yieldData = await this.contractService.computeYield(strategy_id);
+        message += `- Yield Before (on-chain): ${yieldData.yieldBefore}\n`;
+        message += `- Yield After (on-chain): ${yieldData.yieldAfter}\n`;
+      } catch (contractError) {
+        // Contract might not have compute_yield function, that's okay
+        console.log(`Note: Contract ${strategy_id} doesn't support compute_yield function`);
+      }
       
-      message += `- Yield Before: ${yieldData.yieldBefore}\n`;
-      message += `- Yield After: ${yieldData.yieldAfter}\n`;
+      message += `- TVL: ${this.strategyService.formatTvl(strategy.tvlUsd)}\n`;
+      message += `- Status: ${strategy.status.value}\n`;
       message += `\n**APY Methodology:**\n${strategy.apyMethodology}`;
 
       return {
         success: true,
         message,
-        data: { ...yieldData, strategy_id, strategy },
+        data: { strategy_id, strategy },
       };
     } catch (error) {
       return {

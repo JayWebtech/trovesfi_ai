@@ -21,22 +21,21 @@ export class WhatsAppBotService implements MessagingPlatform {
   }
 
   /**
-   * Sanitize message for WhatsApp (remove markdown formatting)
+   * Convert markdown to WhatsApp formatting
+   * WhatsApp supports: *bold*, _italic_, ~strikethrough~, ```code```
    */
-  private sanitizeMessage(message: string): string {
-    // Remove bold markdown (**text** -> text)
-    let sanitized = message.replace(/\*\*(.*?)\*\*/g, '$1');
+  private convertToWhatsAppFormat(message: string): string {
+    // Convert **bold** to *bold* (WhatsApp uses single asterisk for bold)
+    let formatted = message.replace(/\*\*(.*?)\*\*/g, '*$1*');
     
-    // Remove italic markdown (_text_ -> text)
-    sanitized = sanitized.replace(/_(.*?)_/g, '$1');
+    // _italic_ stays the same in WhatsApp
     
-    // Remove code blocks (```text``` -> text)
-    sanitized = sanitized.replace(/```(.*?)```/gs, '$1');
+    // Convert `code` to ```code``` (WhatsApp uses triple backticks for monospace)
+    formatted = formatted.replace(/`([^`]+)`/g, '```$1```');
     
-    // Remove inline code (`text` -> text)
-    sanitized = sanitized.replace(/`([^`]+)`/g, '$1');
+    // Multi-line code blocks already use ``` so they're fine
     
-    return sanitized;
+    return formatted;
   }
 
   /**
@@ -48,7 +47,7 @@ export class WhatsAppBotService implements MessagingPlatform {
     _options?: any
   ): Promise<void> {
     try {
-      const sanitizedMessage = this.sanitizeMessage(message);
+      const formattedMessage = this.convertToWhatsAppFormat(message);
       
       const response = await axios.post(
         `${this.apiUrl}/messages`,
@@ -59,7 +58,7 @@ export class WhatsAppBotService implements MessagingPlatform {
           type: 'text',
           text: {
             preview_url: true,
-            body: sanitizedMessage,
+            body: formattedMessage,
           },
         },
         {
@@ -102,6 +101,7 @@ export class WhatsAppBotService implements MessagingPlatform {
       );
 
       const mediaId = mediaResponse.data.id;
+      const formattedCaption = caption ? this.convertToWhatsAppFormat(caption) : 'Visual Guide';
 
       const messageResponse = await axios.post(
         `${this.apiUrl}/messages`,
@@ -112,7 +112,7 @@ export class WhatsAppBotService implements MessagingPlatform {
           type: 'image',
           image: {
             id: mediaId,
-            caption: caption || 'Visual Guide',
+            caption: formattedCaption,
           },
         },
         {

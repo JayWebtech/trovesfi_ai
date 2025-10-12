@@ -1,0 +1,2461 @@
+{
+    "status": true,
+    "strategies": [
+      {
+        "name": "xSTRK Sensei",
+        "id": "xstrk_sensei",
+        "apy": 0.296848905897824,
+        "apySplit": {
+          "baseApy": 0.296848905897824,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "STRK",
+            "name": "Starknet",
+            "address": "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+            "decimals": 18
+          }
+        ],
+        "leverage": 0,
+        "contract": [
+          {
+            "name": "STRK",
+            "address": "0x7023a5cadc8a5db80e4f0fde6b330cbd3c17bbbf9cb145cbabd7bd5e6fb7b0b"
+          }
+        ],
+        "tvlUsd": 109600.360975,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 0.406818181818182,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/strk.svg"
+        ],
+        "isAudited": false,
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Hyper xSTRK",
+        "id": "hyper_xstrk",
+        "apy": 0.285928070125744,
+        "apySplit": {
+          "baseApy": 0.285928070125744,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current annualized APY in terms of base asset of the LST. There is no additional fee taken by Troves on LST APY. We charge a 10% performance fee on the additional gain which is already accounted in the APY shown.",
+        "depositToken": [
+          {
+            "symbol": "xSTRK",
+            "name": "xSTRK",
+            "address": "0x28d709c875c0ceac3dce7065bec5328186dc89fe254527084d1689910954b0a",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "xSTRK",
+            "address": "0x46c7a54c82b1fe374353859f554a40b8bd31d3e30f742901579e7b57b1b5960"
+          }
+        ],
+        "tvlUsd": 16534.8408574596,
+        "status": {
+          "number": 1,
+          "value": "Hot & New 🔥"
+        },
+        "riskFactor": 1.5,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/xstrk.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Hyper xtBTC",
+        "id": "hyper_xtbtc",
+        "apy": 0.177671036831951,
+        "apySplit": {
+          "baseApy": 0.177671036831951,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current annualized APY in terms of base asset of the LST. There is no additional fee taken by Troves on LST APY. We charge a 10% performance fee on the additional gain which is already accounted in the APY shown.",
+        "depositToken": [
+          {
+            "symbol": "xtBTC",
+            "name": "xtBTC",
+            "address": "0x43a35c1425a0125ef8c171f1a75c6f31ef8648edcc8324b55ce1917db3f9b91",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "xtBTC",
+            "address": "0x47d5f68477e5637ce0e56436c6b5eee5a354e6828995dae106b11a48679328"
+          }
+        ],
+        "tvlUsd": 340009.646375808,
+        "status": {
+          "number": 1,
+          "value": "Hot & New 🔥"
+        },
+        "riskFactor": 1.5,
+        "logos": [
+          "https://assets.strkfarm.com/integrations/tokens/xtbtc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Hyper xLBTC",
+        "id": "hyper_xlbtc",
+        "apy": 0.155682317358804,
+        "apySplit": {
+          "baseApy": 0.155682317358804,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current annualized APY in terms of base asset of the LST. There is no additional fee taken by Troves on LST APY. We charge a 10% performance fee on the additional gain which is already accounted in the APY shown.",
+        "depositToken": [
+          {
+            "symbol": "xLBTC",
+            "name": "xLBTC",
+            "address": "0x7dd3c80de9fcc5545f0cb83678826819c79619ed7992cc06ff81fc67cd2efe0",
+            "decimals": 8
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "xLBTC",
+            "address": "0x64cf24d4883fe569926419a0569ab34497c6956a1a308fa883257f7486d7030"
+          }
+        ],
+        "tvlUsd": 27232.978046,
+        "status": {
+          "number": 1,
+          "value": "Hot & New 🔥"
+        },
+        "riskFactor": 1.5,
+        "logos": [
+          "https://assets.strkfarm.com/integrations/tokens/xlbtc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "STRK Evergreen",
+        "id": "evergreen_strk",
+        "apy": 0.149437710524606,
+        "apySplit": {
+          "baseApy": 0.149437710524606,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "STRK",
+            "name": "STRK",
+            "address": "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "STRK",
+            "address": "0x55d012f57e58c96e0a5c7ebbe55853989d01e6538b15a95e7178aca4af05c21"
+          }
+        ],
+        "tvlUsd": 26143.7153901977,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.1,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/strk.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Hyper xsBTC",
+        "id": "hyper_xsbtc",
+        "apy": 0.144763464964029,
+        "apySplit": {
+          "baseApy": 0.144763464964029,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current annualized APY in terms of base asset of the LST. There is no additional fee taken by Troves on LST APY. We charge a 10% performance fee on the additional gain which is already accounted in the APY shown.",
+        "depositToken": [
+          {
+            "symbol": "xsBTC",
+            "name": "xsBTC",
+            "address": "0x580f3dc564a7b82f21d40d404b3842d490ae7205e6ac07b1b7af2b4a5183dc9",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "xsBTC",
+            "address": "0x437ef1e7d0f100b2e070b7a65cafec0b2be31b0290776da8b4112f5473d8d9"
+          }
+        ],
+        "tvlUsd": 501.386354,
+        "status": {
+          "number": 1,
+          "value": "Hot & New 🔥"
+        },
+        "riskFactor": 1.5,
+        "logos": [
+          "https://assets.strkfarm.com/integrations/tokens/xsbtc_solv.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Vesu Fusion STRK",
+        "id": "vesu_fusion_strk",
+        "apy": 0.132991476475641,
+        "apySplit": {
+          "baseApy": 0.132991476475641,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "STRK",
+            "name": "STRK",
+            "address": "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "STRK",
+            "address": "0x7fb5bcb8525954a60fde4e8fb8220477696ce7117ef264775a1770e23571929"
+          }
+        ],
+        "tvlUsd": 1981.58810508241,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 0.75,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/strk.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://assets.troves.fi/strkfarm/audit_report_vesu_and_ekubo_strats.pdf",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "13.30%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Pool name: Re7 xSTRK",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "14.78%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope xSTRK",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "15.26%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Genesis",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "9.98%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Re7 USDC",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "9.56%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Re7 Starknet Ecosystem",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "9.56%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope wstETH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "9.56%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope Cornerstone",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "9.56%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope CASH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "9.56%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Re7 rUSDC",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "9.56%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          }
+        ]
+      },
+      {
+        "name": "USDC Evergreen",
+        "id": "evergreen_usdc",
+        "apy": 0.0925362839221159,
+        "apySplit": {
+          "baseApy": 0.0925362839221159,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "USDC",
+            "name": "USDC",
+            "address": "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+            "decimals": 6
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "USDC",
+            "address": "0x7e6498cf6a1bfc7e6fc89f1831865e2dacb9756def4ec4b031a9138788a3b5e"
+          }
+        ],
+        "tvlUsd": 92171.1251404314,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.1,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/usdc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "USDT Evergreen",
+        "id": "evergreen_usdt",
+        "apy": 0.0918508918252893,
+        "apySplit": {
+          "baseApy": 0.0918508918252893,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "USDT",
+            "name": "USDT",
+            "address": "0x68f5c6a61780768455de69077e07e89787839bf8166decfbf92b645209c0fb8",
+            "decimals": 6
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "USDT",
+            "address": "0x1c4933d1880c6778585e597154eaca7b428579d72f3aae425ad2e4d26c6bb3"
+          }
+        ],
+        "tvlUsd": 230472.754701,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.1,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/usdt.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Vesu Fusion USDC",
+        "id": "vesu_fusion_usdc",
+        "apy": 0.0619387300868536,
+        "apySplit": {
+          "baseApy": 0.0619387300868536,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "USDC",
+            "name": "USDC",
+            "address": "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+            "decimals": 6
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "USDC",
+            "address": "0xa858c97e9454f407d1bd7c57472fc8d8d8449a777c822b41d18e387816f29c"
+          }
+        ],
+        "tvlUsd": 663.119574928968,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 0.75,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/usdc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://assets.troves.fi/strkfarm/audit_report_vesu_and_ekubo_strats.pdf",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "6.19%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Pool name: Re7 Starknet Ecosystem",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "6.92%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Genesis",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "5.10%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Re7 USDC",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.82%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope wstETH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.76%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope Cornerstone",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "5.92%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope CASH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.76%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope xSTRK",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.76%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Re7 rUSDC",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.76%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          }
+        ]
+      },
+      {
+        "name": "ETH Evergreen",
+        "id": "evergreen_eth",
+        "apy": 0.0563001345638131,
+        "apySplit": {
+          "baseApy": 0.0563001345638131,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "ETH",
+            "name": "ETH",
+            "address": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "ETH",
+            "address": "0x446c22d4d3f5cb52b4950ba832ba1df99464c6673a37c092b1d9622650dbd8"
+          }
+        ],
+        "tvlUsd": 181729.224254407,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.1,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/eth.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Hyper xWBTC",
+        "id": "hyper_xwbtc",
+        "apy": 0.047216016975443,
+        "apySplit": {
+          "baseApy": 0.047216016975443,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current annualized APY in terms of base asset of the LST. There is no additional fee taken by Troves on LST APY. We charge a 10% performance fee on the additional gain which is already accounted in the APY shown.",
+        "depositToken": [
+          {
+            "symbol": "xWBTC",
+            "name": "xWBTC",
+            "address": "0x6a567e68c805323525fe1649adb80b03cddf92c23d2629a6779f54192dffc13",
+            "decimals": 8
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "xWBTC",
+            "address": "0x2da9d0f96a46b453f55604313785dc866424240b1c6811d13bef594343db818"
+          }
+        ],
+        "tvlUsd": 1404969.03632014,
+        "status": {
+          "number": 1,
+          "value": "Hot & New 🔥"
+        },
+        "riskFactor": 1.5,
+        "logos": [
+          "https://assets.strkfarm.com/integrations/tokens/xwbtc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Vesu Fusion USDT",
+        "id": "vesu_fusion_usdt",
+        "apy": 0.0427707,
+        "apySplit": {
+          "baseApy": 0.0427707,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "USDT",
+            "name": "USDT",
+            "address": "0x68f5c6a61780768455de69077e07e89787839bf8166decfbf92b645209c0fb8",
+            "decimals": 6
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "USDT",
+            "address": "0x115e94e722cfc4c77a2f15c4aefb0928c1c0029e5a57570df24c650cb7cec2c"
+          }
+        ],
+        "tvlUsd": 57.482111,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 0.75,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/usdt.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://assets.troves.fi/strkfarm/audit_report_vesu_and_ekubo_strats.pdf",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "4.28%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Pool name: Genesis",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "4.75%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope wstETH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.43%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope Cornerstone",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.43%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope CASH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.43%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope xSTRK",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.43%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Vesu Fusion ETH",
+        "id": "vesu_fusion_eth",
+        "apy": 0.0390388248155609,
+        "apySplit": {
+          "baseApy": 0.0390388248155609,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "ETH",
+            "name": "ETH",
+            "address": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "ETH",
+            "address": "0x5eaf5ee75231cecf79921ff8ded4b5ffe96be718bcb3daf206690ad1a9ad0ca"
+          }
+        ],
+        "tvlUsd": 7583.21112864176,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 0.75,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/eth.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://assets.troves.fi/strkfarm/audit_report_vesu_and_ekubo_strats.pdf",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "3.90%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Pool name: Genesis",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "4.35%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Re7 wstETH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.92%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              },
+              {
+                "title": "Pool name: Re7 USDC",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.87%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope wstETH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.87%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope Cornerstone",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.87%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope CASH",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.87%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Alterscope xSTRK",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.87%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 20.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              },
+              {
+                "title": "Pool name: Re7 rUSDC",
+                "subItems": [
+                  {
+                    "key": "APY",
+                    "value": "3.87%"
+                  },
+                  {
+                    "key": "Weight",
+                    "value": "0.00 / 100.00%"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "color": "gray"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          }
+        ]
+      },
+      {
+        "name": "WBTC Evergreen",
+        "id": "evergreen_wbtc",
+        "apy": 0.0327685877083924,
+        "apySplit": {
+          "baseApy": 0.0327685877083924,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Current APY including any fees. Net returns subject to change based on market conditions.",
+        "depositToken": [
+          {
+            "symbol": "WBTC",
+            "name": "WBTC",
+            "address": "0x3fe2b97c1fd336e750087d68b9b867997fd64a2661ff3ca5a7c771641e8e7ac",
+            "decimals": 8
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "WBTC",
+            "address": "0x5a4c1651b913aa2ea7afd9024911603152a19058624c3e425405370d62bf80c"
+          }
+        ],
+        "tvlUsd": 8740.012272,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.1,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/wbtc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#starknet-vault-kit",
+        "actions": [],
+        "investmentFlows": []
+      },
+      {
+        "name": "Ekubo xSTRK/STRK",
+        "id": "ekubo_cl_xstrkstrk",
+        "apy": 0.0322793830343864,
+        "apySplit": {
+          "baseApy": 0.0322793830343864,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "APY based on 30-day historical performance, including fees and rewards.",
+        "depositToken": [
+          {
+            "symbol": "xSTRK",
+            "name": "xSTRK",
+            "address": "0x28d709c875c0ceac3dce7065bec5328186dc89fe254527084d1689910954b0a",
+            "decimals": 18
+          },
+          {
+            "symbol": "STRK",
+            "name": "STRK",
+            "address": "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo xSTRK/STRK",
+            "address": "0x1f083b98674bc21effee29ef443a00c7b9a500fd92cf30341a3da12c73f2324"
+          }
+        ],
+        "tvlUsd": 722177.388762206,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.50375939849624,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/xstrk.svg",
+          "https://assets.troves.fi/integrations/tokens/strk.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "3.23%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xSTRK/STRK",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "-200 to 200 ticks"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xSTRK/STRK",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Ekubo xtBTC/tBTC",
+        "id": "ekubo_cl_xtbtctbtc",
+        "apy": 0.0142226855029713,
+        "apySplit": {
+          "baseApy": 0.0142226855029713,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "APY based on 30-day historical performance, including fees and rewards.",
+        "depositToken": [
+          {
+            "symbol": "xtBTC",
+            "name": "xtBTC",
+            "address": "0x43a35c1425a0125ef8c171f1a75c6f31ef8648edcc8324b55ce1917db3f9b91",
+            "decimals": 18
+          },
+          {
+            "symbol": "tBTC",
+            "name": "tBTC",
+            "address": "0x4daa17763b286d1e59b97c283c0b8c949994c361e426a28f743c67bdfe9a32f",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo xtBTC/tBTC",
+            "address": "0x785dc3dfc4e80ef2690a99512481e3ed3a5266180adda5a47e856245d68a4af"
+          }
+        ],
+        "tvlUsd": 2852161.38217089,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.50375939849624,
+        "logos": [
+          "https://assets.strkfarm.com/integrations/tokens/xtbtc.svg",
+          "https://assets.strkfarm.com/integrations/tokens/tbtc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "1.42%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xtBTC/tBTC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "-200 to 200 ticks"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xtBTC/tBTC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Ekubo WBTC/USDC",
+        "id": "ekubo_cl_wbtcusdc",
+        "apy": 0,
+        "apySplit": {
+          "baseApy": 0,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Annualized fee APY, calculated as fees earned in the last 24h divided by TVL",
+        "depositToken": [
+          {
+            "symbol": "WBTC",
+            "name": "WBTC",
+            "address": "0x3fe2b97c1fd336e750087d68b9b867997fd64a2661ff3ca5a7c771641e8e7ac",
+            "decimals": 8
+          },
+          {
+            "symbol": "USDC",
+            "name": "USDC",
+            "address": "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+            "decimals": 6
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo WBTC/USDC",
+            "address": "0x2bcaef2eb7706875a5fdc6853dd961a0590f850bc3a031c59887189b5e84ba1"
+          }
+        ],
+        "tvlUsd": 7374192.4199134,
+        "status": {
+          "number": 2,
+          "value": "New"
+        },
+        "riskFactor": 2.66,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/wbtc.svg",
+          "https://assets.troves.fi/integrations/tokens/usdc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "0.00%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo WBTC/USDC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.05%, 1000 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "Managed by Re7"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo WBTC/USDC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.05%, 1000 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ],
+        "curator": {
+          "name": "Re7 Labs",
+          "logo": "https://www.re7labs.xyz/favicon.ico"
+        }
+      },
+      {
+        "name": "Ekubo WBTC/STRK",
+        "id": "ekubo_cl_wbtcstrk",
+        "apy": 0,
+        "apySplit": {
+          "baseApy": 0,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Annualized fee APY, calculated as fees earned in the last 24h divided by TVL",
+        "depositToken": [
+          {
+            "symbol": "WBTC",
+            "name": "WBTC",
+            "address": "0x3fe2b97c1fd336e750087d68b9b867997fd64a2661ff3ca5a7c771641e8e7ac",
+            "decimals": 8
+          },
+          {
+            "symbol": "STRK",
+            "name": "STRK",
+            "address": "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo WBTC/STRK",
+            "address": "0x1248e385c23a929a015ec298a26560fa7745bbd6e41a886550e337b02714b1b"
+          }
+        ],
+        "tvlUsd": 87730.4875032124,
+        "status": {
+          "number": 2,
+          "value": "New"
+        },
+        "riskFactor": 2.99,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/wbtc.svg",
+          "https://assets.troves.fi/integrations/tokens/strk.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "0.00%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo WBTC/STRK",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "Managed by Re7"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo WBTC/STRK",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ],
+        "curator": {
+          "name": "Re7 Labs",
+          "logo": "https://www.re7labs.xyz/favicon.ico"
+        }
+      },
+      {
+        "name": "Ekubo xWBTC/WBTC",
+        "id": "ekubo_cl_xwbtcwbtc",
+        "apy": -0.042457886073343,
+        "apySplit": {
+          "baseApy": -0.042457886073343,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "APY based on 30-day historical performance, including fees and rewards.",
+        "depositToken": [
+          {
+            "symbol": "WBTC",
+            "name": "WBTC",
+            "address": "0x3fe2b97c1fd336e750087d68b9b867997fd64a2661ff3ca5a7c771641e8e7ac",
+            "decimals": 8
+          },
+          {
+            "symbol": "xWBTC",
+            "name": "xWBTC",
+            "address": "0x6a567e68c805323525fe1649adb80b03cddf92c23d2629a6779f54192dffc13",
+            "decimals": 8
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo xWBTC/WBTC",
+            "address": "0x2ea99b4971d3c277fa4a9b4beb7d4d7d169e683393a29eef263d5d57b4380a"
+          }
+        ],
+        "tvlUsd": 2112776.36373728,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.50375939849624,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/wbtc.svg",
+          "https://assets.strkfarm.com/integrations/tokens/xwbtc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "-4.25%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xWBTC/WBTC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "-200 to 200 ticks"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xWBTC/WBTC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Ekubo xsBTC/solvBTC",
+        "id": "ekubo_cl_xsbtcsolvbtc",
+        "apy": null,
+        "apySplit": {
+          "baseApy": null,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "APY based on 30-day historical performance, including fees and rewards.",
+        "depositToken": [
+          {
+            "symbol": "xsBTC",
+            "name": "xsBTC",
+            "address": "0x580f3dc564a7b82f21d40d404b3842d490ae7205e6ac07b1b7af2b4a5183dc9",
+            "decimals": 18
+          },
+          {
+            "symbol": "solvBTC",
+            "name": "solvBTC",
+            "address": "0x593e034dda23eea82d2ba9a30960ed42cf4a01502cc2351dc9b9881f9931a68",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo xsBTC/solvBTC",
+            "address": "0x3af1c7faa7c464cf2c494e988972ad1939f1103dbfb6e47e9bf0c47e49b14ef"
+          }
+        ],
+        "tvlUsd": 182.94047526377,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.50375939849624,
+        "logos": [
+          "https://assets.strkfarm.com/integrations/tokens/xsbtc_solv.svg",
+          "https://assets.strkfarm.com/integrations/tokens/solvbtc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "NaN%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xsBTC/solvBTC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "-200 to 200 ticks"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xsBTC/solvBTC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Ekubo xLBTC/LBTC",
+        "id": "ekubo_cl_xlbtclbtc",
+        "apy": null,
+        "apySplit": {
+          "baseApy": null,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "APY based on 30-day historical performance, including fees and rewards.",
+        "depositToken": [
+          {
+            "symbol": "LBTC",
+            "name": "LBTC",
+            "address": "0x36834a40984312f7f7de8d31e3f6305b325389eaeea5b1c0664b2fb936461a4",
+            "decimals": 8
+          },
+          {
+            "symbol": "xLBTC",
+            "name": "xLBTC",
+            "address": "0x7dd3c80de9fcc5545f0cb83678826819c79619ed7992cc06ff81fc67cd2efe0",
+            "decimals": 8
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo xLBTC/LBTC",
+            "address": "0x314c4653ab1aa01f5465773cb879f525d7e369a137bc3ae084761aee99a1712"
+          }
+        ],
+        "tvlUsd": 32.52027426,
+        "status": {
+          "number": 3,
+          "value": "Active"
+        },
+        "riskFactor": 1.50375939849624,
+        "logos": [
+          "https://assets.strkfarm.com/integrations/tokens/lbtc.svg",
+          "https://assets.strkfarm.com/integrations/tokens/xlbtc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "NaN%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xLBTC/LBTC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "-200 to 200 ticks"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo xLBTC/LBTC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Ekubo ETH/USDC",
+        "id": "ekubo_cl_ethusdc",
+        "apy": 0,
+        "apySplit": {
+          "baseApy": 0,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Annualized fee APY, calculated as fees earned in the last 24h divided by TVL",
+        "depositToken": [
+          {
+            "symbol": "ETH",
+            "name": "ETH",
+            "address": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+            "decimals": 18
+          },
+          {
+            "symbol": "USDC",
+            "name": "USDC",
+            "address": "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+            "decimals": 6
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo ETH/USDC",
+            "address": "0x160d8fa4569ef6a12e6bf47cb943d7b5ebba8a41a69a14c1d943050ba5ff947"
+          }
+        ],
+        "tvlUsd": 829738.140084424,
+        "status": {
+          "number": 2,
+          "value": "New"
+        },
+        "riskFactor": 2.99,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/eth.svg",
+          "https://assets.troves.fi/integrations/tokens/usdc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "0.00%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo ETH/USDC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.05%, 1000 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "Managed by Re7"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo ETH/USDC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.05%, 1000 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ],
+        "curator": {
+          "name": "Re7 Labs",
+          "logo": "https://www.re7labs.xyz/favicon.ico"
+        }
+      },
+      {
+        "name": "Ekubo USDC/USDT",
+        "id": "ekubo_cl_usdcusdt",
+        "apy": 0,
+        "apySplit": {
+          "baseApy": 0,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Annualized fee APY, calculated as fees earned in the last 24h divided by TVL",
+        "depositToken": [
+          {
+            "symbol": "USDC",
+            "name": "USDC",
+            "address": "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+            "decimals": 6
+          },
+          {
+            "symbol": "USDT",
+            "name": "USDT",
+            "address": "0x68f5c6a61780768455de69077e07e89787839bf8166decfbf92b645209c0fb8",
+            "decimals": 6
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo USDC/USDT",
+            "address": "0x3a4f8debaf12af97bb911099bc011d63d6c208d4c5ba8e15d7f437785b0aaa2"
+          }
+        ],
+        "tvlUsd": 1213021.77131272,
+        "status": {
+          "number": 2,
+          "value": "New"
+        },
+        "riskFactor": 1,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/usdc.svg",
+          "https://assets.troves.fi/integrations/tokens/usdt.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "0.00%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo USDC/USDT",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "Managed by Re7"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo USDC/USDT",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.01%, 200 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ],
+        "curator": {
+          "name": "Re7 Labs",
+          "logo": "https://www.re7labs.xyz/favicon.ico"
+        }
+      },
+      {
+        "name": "Ekubo STRK/USDC",
+        "id": "ekubo_cl_strkusdc",
+        "apy": 0,
+        "apySplit": {
+          "baseApy": 0,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Annualized fee APY, calculated as fees earned in the last 24h divided by TVL",
+        "depositToken": [
+          {
+            "symbol": "STRK",
+            "name": "STRK",
+            "address": "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+            "decimals": 18
+          },
+          {
+            "symbol": "USDC",
+            "name": "USDC",
+            "address": "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+            "decimals": 6
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo STRK/USDC",
+            "address": "0x351b36d0d9d8b40010658825adeeddb1397436cd41acd0ff6c6e23aaa8b5b30"
+          }
+        ],
+        "tvlUsd": 1239863.10653249,
+        "status": {
+          "number": 2,
+          "value": "New"
+        },
+        "riskFactor": 2.99,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/strk.svg",
+          "https://assets.troves.fi/integrations/tokens/usdc.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "0.00%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo STRK/USDC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.05%, 1000 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "Managed by Re7"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo STRK/USDC",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.05%, 1000 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ],
+        "curator": {
+          "name": "Re7 Labs",
+          "logo": "https://www.re7labs.xyz/favicon.ico"
+        }
+      },
+      {
+        "name": "Ekubo STRK/ETH",
+        "id": "ekubo_cl_strketh",
+        "apy": 0,
+        "apySplit": {
+          "baseApy": 0,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Annualized fee APY, calculated as fees earned in the last 24h divided by TVL",
+        "depositToken": [
+          {
+            "symbol": "STRK",
+            "name": "STRK",
+            "address": "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d",
+            "decimals": 18
+          },
+          {
+            "symbol": "ETH",
+            "name": "ETH",
+            "address": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo STRK/ETH",
+            "address": "0x4ce3024b0ee879009112d7b0e073f8a87153dd35b029347d4247ffe48d28f51"
+          }
+        ],
+        "tvlUsd": 739445.244303719,
+        "status": {
+          "number": 2,
+          "value": "New"
+        },
+        "riskFactor": 2.99,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/strk.svg",
+          "https://assets.troves.fi/integrations/tokens/eth.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "0.00%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo STRK/ETH",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.30%, 5982 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "Managed by Re7"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo STRK/ETH",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.30%, 5982 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ],
+        "curator": {
+          "name": "Re7 Labs",
+          "logo": "https://www.re7labs.xyz/favicon.ico"
+        }
+      },
+      {
+        "name": "Ekubo WBTC/ETH",
+        "id": "ekubo_cl_wbtceth",
+        "apy": 0,
+        "apySplit": {
+          "baseApy": 0,
+          "rewardsApy": 0
+        },
+        "apyMethodology": "Annualized fee APY, calculated as fees earned in the last 24h divided by TVL",
+        "depositToken": [
+          {
+            "symbol": "WBTC",
+            "name": "WBTC",
+            "address": "0x3fe2b97c1fd336e750087d68b9b867997fd64a2661ff3ca5a7c771641e8e7ac",
+            "decimals": 8
+          },
+          {
+            "symbol": "ETH",
+            "name": "ETH",
+            "address": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+            "decimals": 18
+          }
+        ],
+        "leverage": 1,
+        "contract": [
+          {
+            "name": "Ekubo WBTC/ETH",
+            "address": "0x1c9232b8186d9317652f05055615f18a120c2ad9e5ee96c39e031c257fb945b"
+          }
+        ],
+        "tvlUsd": 3026650.76463867,
+        "status": {
+          "number": 2,
+          "value": "New"
+        },
+        "riskFactor": 2.66,
+        "logos": [
+          "https://assets.troves.fi/integrations/tokens/wbtc.svg",
+          "https://assets.troves.fi/integrations/tokens/eth.svg"
+        ],
+        "isAudited": true,
+        "auditUrl": "https://docs.troves.fi/p/security#ekubo-vault",
+        "actions": [],
+        "investmentFlows": [
+          {
+            "id": "base",
+            "title": "Your Deposit",
+            "subItems": [
+              {
+                "key": "Net yield",
+                "value": "0.00%"
+              },
+              {
+                "key": "Performance Fee",
+                "value": "10.00%"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo WBTC/ETH",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.05%, 1000 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "#6e53dc"
+            }
+          },
+          {
+            "id": "rebalance",
+            "title": "Automated Rebalance",
+            "subItems": [
+              {
+                "key": "Range selection",
+                "value": "Managed by Re7"
+              }
+            ],
+            "linkedFlows": [
+              {
+                "title": "Ekubo WBTC/ETH",
+                "subItems": [
+                  {
+                    "key": "Pool",
+                    "value": "0.05%, 1000 tick spacing"
+                  }
+                ],
+                "linkedFlows": [],
+                "style": {
+                  "backgroundColor": "#35484f"
+                }
+              }
+            ],
+            "style": {
+              "backgroundColor": "purple"
+            }
+          }
+        ],
+        "curator": {
+          "name": "Re7 Labs",
+          "logo": "https://www.re7labs.xyz/favicon.ico"
+        }
+      }
+    ],
+    "lastUpdated": "2025-10-12T12:33:00.262Z"
+  }

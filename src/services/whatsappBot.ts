@@ -21,6 +21,25 @@ export class WhatsAppBotService implements MessagingPlatform {
   }
 
   /**
+   * Sanitize message for WhatsApp (remove markdown formatting)
+   */
+  private sanitizeMessage(message: string): string {
+    // Remove bold markdown (**text** -> text)
+    let sanitized = message.replace(/\*\*(.*?)\*\*/g, '$1');
+    
+    // Remove italic markdown (_text_ -> text)
+    sanitized = sanitized.replace(/_(.*?)_/g, '$1');
+    
+    // Remove code blocks (```text``` -> text)
+    sanitized = sanitized.replace(/```(.*?)```/gs, '$1');
+    
+    // Remove inline code (`text` -> text)
+    sanitized = sanitized.replace(/`([^`]+)`/g, '$1');
+    
+    return sanitized;
+  }
+
+  /**
    * Send a text message via WhatsApp Cloud API
    */
   async sendMessage(
@@ -29,6 +48,8 @@ export class WhatsAppBotService implements MessagingPlatform {
     _options?: any
   ): Promise<void> {
     try {
+      const sanitizedMessage = this.sanitizeMessage(message);
+      
       const response = await axios.post(
         `${this.apiUrl}/messages`,
         {
@@ -38,7 +59,7 @@ export class WhatsAppBotService implements MessagingPlatform {
           type: 'text',
           text: {
             preview_url: true,
-            body: message,
+            body: sanitizedMessage,
           },
         },
         {
@@ -91,7 +112,7 @@ export class WhatsAppBotService implements MessagingPlatform {
           type: 'image',
           image: {
             id: mediaId,
-            caption: caption || '📸 Visual Guide',
+            caption: caption || 'Visual Guide',
           },
         },
         {
@@ -105,7 +126,7 @@ export class WhatsAppBotService implements MessagingPlatform {
       console.log('WhatsApp photo sent successfully:', messageResponse.data);
     } catch (error) {
       console.error('Error sending WhatsApp photo:', error);
-      await this.sendMessage(chatId, `📸 ${caption || 'Image'}: ${photoUrl}`);
+      await this.sendMessage(chatId, `${caption || 'Image'}: ${photoUrl}`);
     }
   }
 
@@ -178,7 +199,7 @@ export class WhatsAppBotService implements MessagingPlatform {
           break;
         default:
           response = {
-            message: '❓ Unknown command. Use /help to see available commands.',
+            message: 'Unknown command. Use /help to see available commands.',
           };
       }
 
@@ -186,14 +207,14 @@ export class WhatsAppBotService implements MessagingPlatform {
 
       if (response.imageUrls && response.imageUrls.length > 0) {
         for (const imageUrl of response.imageUrls) {
-          await this.sendPhoto(message.chatId, imageUrl, '📸 Visual Guide');
+          await this.sendPhoto(message.chatId, imageUrl, 'Visual Guide');
         }
       }
     } catch (error) {
       console.error('Error handling command:', error);
       await this.sendMessage(
         message.chatId,
-        '❌ Sorry, I encountered an error processing your command. Please try again.'
+        'Sorry, I encountered an error processing your command. Please try again.'
       );
     }
   }
@@ -210,14 +231,14 @@ export class WhatsAppBotService implements MessagingPlatform {
 
       if (response.imageUrls && response.imageUrls.length > 0) {
         for (const imageUrl of response.imageUrls) {
-          await this.sendPhoto(message.chatId, imageUrl, '📸 Visual Guide');
+          await this.sendPhoto(message.chatId, imageUrl, 'Visual Guide');
         }
       }
     } catch (error) {
       console.error('Error processing regular message:', error);
       await this.sendMessage(
         message.chatId,
-        '❌ Sorry, I encountered an error processing your message. Please try again.'
+        'Sorry, I encountered an error processing your message. Please try again.'
       );
     }
   }
@@ -226,26 +247,24 @@ export class WhatsAppBotService implements MessagingPlatform {
    * Get welcome message
    */
   private async getWelcomeMessage(): Promise<BotResponse> {
-    const welcomeMessage = `
-🚀 *Welcome to Troves.fi AI Assistant!*
+    const welcomeMessage = `Welcome to Troves.fi AI Assistant!
 
 I'm here to help you with everything about Troves.fi, the yield aggregator on Starknet.
 
-💡 *What I can do:*
-• Answer questions about Troves.fi
-• Provide real-time contract data
-• Explain yield farming strategies
-• Help with Starknet ecosystem
+What I can do:
+- Answer questions about Troves.fi
+- Provide real-time contract data
+- Explain yield farming strategies
+- Help with Starknet ecosystem
 
-🔍 *Just ask me anything in natural language!*
+Just ask me anything in natural language!
 
-*Examples:*
-• "What's the current yield?"
-• "How do I get started?"
-• "What pools are available?"
+Examples:
+- "What's the current yield?"
+- "How do I get started?"
+- "What pools are available?"
 
-Use /help for more information.
-    `;
+Use /help for more information.`;
 
     return { message: welcomeMessage };
   }
@@ -271,7 +290,7 @@ Use /help for more information.
   private async getStatusMessage(): Promise<BotResponse> {
     try {
       const availableVaults = this.contractService.getAvailableVaults();
-      let statusMessage = '📊 *Troves.fi Contract Status*\n\n';
+      let statusMessage = 'Troves.fi Contract Status\n\n';
 
       for (const vaultType of availableVaults) {
         try {
@@ -279,20 +298,20 @@ Use /help for more information.
             await this.contractService.getContractData(vaultType);
           const vaultInfo = this.getVaultInfo(vaultType);
 
-          statusMessage += `🏦 *${vaultInfo.name}*\n`;
-          statusMessage += `💰 TVL: ${this.formatNumber(contractData.totalAssets)}\n`;
-          statusMessage += `🔄 Supply: ${this.formatNumber(
+          statusMessage += `${vaultInfo.name}\n`;
+          statusMessage += `TVL: ${this.formatNumber(contractData.totalAssets)}\n`;
+          statusMessage += `Supply: ${this.formatNumber(
             await this.contractService.getTotalSupply(vaultType)
           )}\n`;
-          statusMessage += `⚙️ Fee: ${contractData.settings.feeBps} BPS\n`;
-          statusMessage += `🏊 Pools: ${contractData.allowedPools.length}\n\n`;
+          statusMessage += `Fee: ${contractData.settings.feeBps} BPS\n`;
+          statusMessage += `Pools: ${contractData.allowedPools.length}\n\n`;
         } catch (error) {
           console.error(`Error getting data for ${vaultType}:`, error);
-          statusMessage += `❌ Error fetching data for ${vaultType}\n\n`;
+          statusMessage += `Error fetching data for ${vaultType}\n\n`;
         }
       }
 
-      statusMessage += `🌐 *Network:* ${
+      statusMessage += `Network: ${
         config.nodeEnv === 'development' ? 'Sepolia Testnet' : 'Mainnet'
       }`;
 
@@ -300,7 +319,7 @@ Use /help for more information.
     } catch (error) {
       console.error('Error getting status:', error);
       return {
-        message: '❌ Error fetching contract status. Please try again.',
+        message: 'Error fetching contract status. Please try again.',
       };
     }
   }
@@ -338,22 +357,20 @@ Use /help for more information.
         const percentage =
           (BigInt(balance) * BigInt(10000)) / BigInt(totalSupply);
 
-        const balanceMessage = `
-💰 *Balance Information - ${vaultInfo.name}*
+        const balanceMessage = `Balance Information - ${vaultInfo.name}
 
-👤 *Address:* \`${userAddress}\`
-💎 *Balance:* ${this.formatNumber(balance)} tokens
-📊 *% of Total Supply:* ${(Number(percentage) / 100).toFixed(4)}%
+Address: ${userAddress}
+Balance: ${this.formatNumber(balance)} tokens
+% of Total Supply: ${(Number(percentage) / 100).toFixed(4)}%
 
-📈 *Portfolio Value:*
-• Total Assets in Vault: ${this.formatNumber(totalAssets)}
-• Your Share: ${this.formatNumber(balance)} tokens
-        `;
+Portfolio Value:
+- Total Assets in Vault: ${this.formatNumber(totalAssets)}
+- Your Share: ${this.formatNumber(balance)} tokens`;
 
         return { message: balanceMessage };
       } else {
         const availableVaults = this.contractService.getAvailableVaults();
-        let balanceMessage = `💰 *Balance Information*\n\n👤 *Address:* \`${userAddress}\`\n\n`;
+        let balanceMessage = `Balance Information\n\nAddress: ${userAddress}\n\n`;
 
         for (const vault of availableVaults) {
           try {
@@ -364,8 +381,8 @@ Use /help for more information.
             const vaultInfo = this.getVaultInfo(vault);
 
             if (BigInt(balance) > 0) {
-              balanceMessage += `🏦 *${vaultInfo.name}*\n`;
-              balanceMessage += `💎 Balance: ${this.formatNumber(balance)} tokens\n\n`;
+              balanceMessage += `${vaultInfo.name}\n`;
+              balanceMessage += `Balance: ${this.formatNumber(balance)} tokens\n\n`;
             }
           } catch (error) {
             console.error(`Error getting balance for ${vault}:`, error);
@@ -378,7 +395,7 @@ Use /help for more information.
       console.error('Error getting balance:', error);
       return {
         message:
-          '❌ Error fetching balance. Please check the address and try again.',
+          'Error fetching balance. Please check the address and try again.',
       };
     }
   }

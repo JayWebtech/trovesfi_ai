@@ -5,14 +5,19 @@ import { Provider, Contract, RpcProvider } from 'starknet';
 import { config } from '../config';
 import { TROVES_ABI } from '../constants/abi';
 import { VaultType, TrovesContractData, YieldData } from '../types';
+import { StrategyService } from './strategyService';
 
 export class ContractService {
   private provider: Provider;
-  private contracts: Map<VaultType, Contract>;
+  private contracts: Map<string, Contract>;
+  private strategyService: StrategyService;
 
   constructor() {
     this.provider = new RpcProvider({ nodeUrl: config.rpcUrl });
     this.contracts = new Map();
+    this.strategyService = new StrategyService();
+    
+    // Initialize contracts from env if available (for backward compatibility)
     Object.entries(config.troves.contracts).forEach(([key, address]) => {
       if (address) {
         this.contracts.set(
@@ -24,29 +29,55 @@ export class ContractService {
   }
 
   /**
-   * Get contract for specific vault type
+   * Get contract for specific vault type or strategy ID
+   * Now dynamically fetches from strategies API if not in cache
    */
-  private getContract(vaultType: VaultType): Contract {
-    const contract = this.contracts.get(vaultType);
-    if (!contract) {
-      throw new Error(`Contract not found for vault type: ${vaultType}`);
+  private async getContract(vaultTypeOrStrategyId: VaultType | string): Promise<Contract> {
+    // Check if contract is already cached
+    if (this.contracts.has(vaultTypeOrStrategyId)) {
+      return this.contracts.get(vaultTypeOrStrategyId)!;
     }
-    return contract;
+
+    // Try to fetch contract address from strategies API
+    try {
+      const contractAddress = await this.strategyService.getContractAddressByStrategyId(vaultTypeOrStrategyId);
+      
+      if (!contractAddress) {
+        throw new Error(`Contract address not found for strategy: ${vaultTypeOrStrategyId}`);
+      }
+
+      // Create and cache the contract
+      const contract = new Contract(TROVES_ABI, contractAddress, this.provider);
+      this.contracts.set(vaultTypeOrStrategyId, contract);
+      
+      console.log(`✅ Dynamically loaded contract for ${vaultTypeOrStrategyId}: ${contractAddress}`);
+      
+      return contract;
+    } catch (error) {
+      throw new Error(`Failed to get contract for ${vaultTypeOrStrategyId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Get contract by strategy ID (public method)
+   */
+  async getContractByStrategyId(strategyId: string): Promise<Contract> {
+    return this.getContract(strategyId);
   }
 
   /**
    * Get available vault types
    */
-  getAvailableVaults(): VaultType[] {
+  getAvailableVaults(): string[] {
     return Array.from(this.contracts.keys());
   }
 
   /**
    * Get total assets in the contract
    */
-  async getTotalAssets(vaultType: VaultType): Promise<string> {
+  async getTotalAssets(vaultTypeOrStrategyId: VaultType | string): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('total_assets');
       return result.toString();
     } catch (error) {
@@ -58,9 +89,9 @@ export class ContractService {
   /**
    * Get the underlying asset address
    */
-  async getAsset(vaultType: VaultType): Promise<string> {
+  async getAsset(vaultTypeOrStrategyId: VaultType | string): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('asset');
       return result.toString();
     } catch (error) {
@@ -72,13 +103,13 @@ export class ContractService {
   /**
    * Get contract settings
    */
-  async getSettings(vaultType: VaultType): Promise<{
+  async getSettings(vaultTypeOrStrategyId: VaultType | string): Promise<{
     defaultPoolIndex: number;
     feeBps: number;
     feeReceiver: string;
   }> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = (await contract.call('get_settings')) as any;
       return {
         defaultPoolIndex: Number(result.default_pool_index),
@@ -95,10 +126,10 @@ export class ContractService {
    * Get allowed pools
    */
   async getAllowedPools(
-    vaultType: VaultType
+    vaultTypeOrStrategyId: VaultType | string
   ): Promise<Array<{ poolId: string; maxWeight: number; vToken: string }>> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = (await contract.call('get_allowed_pools')) as any;
       return result.map((pool: any) => ({
         poolId: pool.pool_id.toString(),
@@ -114,9 +145,9 @@ export class ContractService {
   /**
    * Get previous index
    */
-  async getPreviousIndex(vaultType: VaultType): Promise<string> {
+  async getPreviousIndex(vaultTypeOrStrategyId: VaultType | string): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('get_previous_index');
       return result.toString();
     } catch (error) {
@@ -128,9 +159,9 @@ export class ContractService {
   /**
    * Compute yield information
    */
-  async computeYield(vaultType: VaultType): Promise<YieldData> {
+  async computeYield(vaultTypeOrStrategyId: VaultType | string): Promise<YieldData> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = (await contract.call('compute_yield')) as any;
       return {
         yieldBefore: result[0].toString(),
@@ -147,10 +178,10 @@ export class ContractService {
    */
   async getUserBalance(
     userAddress: string,
-    vaultType: VaultType
+    vaultTypeOrStrategyId: VaultType | string
   ): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('balance_of', [userAddress]);
       return result.toString();
     } catch (error) {
@@ -162,9 +193,9 @@ export class ContractService {
   /**
    * Get total supply
    */
-  async getTotalSupply(vaultType: VaultType): Promise<string> {
+  async getTotalSupply(vaultTypeOrStrategyId: VaultType | string): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('total_supply');
       return result.toString();
     } catch (error) {
@@ -176,20 +207,26 @@ export class ContractService {
   /**
    * Get comprehensive contract data
    */
-  async getContractData(vaultType: VaultType): Promise<TrovesContractData> {
+  async getContractData(vaultTypeOrStrategyId: VaultType | string): Promise<TrovesContractData> {
     try {
       const [totalAssets, asset, settings, allowedPools, previousIndex] =
         await Promise.all([
-          this.getTotalAssets(vaultType),
-          this.getAsset(vaultType),
-          this.getSettings(vaultType),
-          this.getAllowedPools(vaultType),
-          this.getPreviousIndex(vaultType),
+          this.getTotalAssets(vaultTypeOrStrategyId),
+          this.getAsset(vaultTypeOrStrategyId),
+          this.getSettings(vaultTypeOrStrategyId),
+          this.getAllowedPools(vaultTypeOrStrategyId),
+          this.getPreviousIndex(vaultTypeOrStrategyId),
         ]);
 
+      // Get contract address - check if it's in config first, otherwise from strategy
+      let contractAddress = config.troves.contracts[vaultTypeOrStrategyId as VaultType];
+      if (!contractAddress) {
+        contractAddress = await this.strategyService.getContractAddressByStrategyId(vaultTypeOrStrategyId) || '';
+      }
+
       return {
-        vaultType,
-        contractAddress: config.troves.contracts[vaultType],
+        vaultType: vaultTypeOrStrategyId as VaultType,
+        contractAddress,
         totalAssets,
         asset,
         settings,
@@ -205,9 +242,9 @@ export class ContractService {
   /**
    * Convert assets to shares
    */
-  async convertToShares(assets: string, vaultType: VaultType): Promise<string> {
+  async convertToShares(assets: string, vaultTypeOrStrategyId: VaultType | string): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('convert_to_shares', [assets]);
       return result.toString();
     } catch (error) {
@@ -219,9 +256,9 @@ export class ContractService {
   /**
    * Convert shares to assets
    */
-  async convertToAssets(shares: string, vaultType: VaultType): Promise<string> {
+  async convertToAssets(shares: string, vaultTypeOrStrategyId: VaultType | string): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('convert_to_assets', [shares]);
       return result.toString();
     } catch (error) {
@@ -233,9 +270,9 @@ export class ContractService {
   /**
    * Preview deposit
    */
-  async previewDeposit(assets: string, vaultType: VaultType): Promise<string> {
+  async previewDeposit(assets: string, vaultTypeOrStrategyId: VaultType | string): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('preview_deposit', [assets]);
       return result.toString();
     } catch (error) {
@@ -247,9 +284,9 @@ export class ContractService {
   /**
    * Preview withdraw
    */
-  async previewWithdraw(assets: string, vaultType: VaultType): Promise<string> {
+  async previewWithdraw(assets: string, vaultTypeOrStrategyId: VaultType | string): Promise<string> {
     try {
-      const contract = this.getContract(vaultType);
+      const contract = await this.getContract(vaultTypeOrStrategyId);
       const result = await contract.call('preview_withdraw', [assets]);
       return result.toString();
     } catch (error) {

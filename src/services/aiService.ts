@@ -5,6 +5,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { config } from '../config';
 import { ContractService } from './contractService';
+import { StrategyService } from './strategyService';
 
 export interface AIResponse {
   message: string;
@@ -17,6 +18,7 @@ export interface AIResponse {
 export class AIService {
   private anthropic: Anthropic;
   private contractService: ContractService;
+  private strategyService: StrategyService;
   private conversationHistory: Map<
     string,
     Array<{ role: string; content: string }>
@@ -24,8 +26,69 @@ export class AIService {
 
   private TROVES_TOOLS = [
     {
+      name: 'get_all_strategies',
+      description: 'Get all available yield strategies from Troves.fi with their APY, TVL, and details',
+      input_schema: {
+        type: 'object',
+        properties: {
+          sort_by: {
+            type: 'string',
+            enum: ['apy', 'tvl', 'name'],
+            description: 'Sort strategies by APY, TVL, or name (optional)',
+          },
+          limit: {
+            type: 'number',
+            description: 'Limit number of strategies returned (default 10)',
+          },
+        },
+        required: [],
+      },
+    },
+    {
+      name: 'get_strategy_by_id',
+      description: 'Get detailed information about a specific strategy by its ID',
+      input_schema: {
+        type: 'object',
+        properties: {
+          strategy_id: {
+            type: 'string',
+            description: 'Strategy ID (e.g., "vesu_fusion_eth", "hyper_xstrk")',
+          },
+        },
+        required: ['strategy_id'],
+      },
+    },
+    {
+      name: 'search_strategies_by_token',
+      description: 'Search for strategies that support a specific token symbol',
+      input_schema: {
+        type: 'object',
+        properties: {
+          token_symbol: {
+            type: 'string',
+            description: 'Token symbol to search for (e.g., "STRK", "ETH", "USDC")',
+          },
+        },
+        required: ['token_symbol'],
+      },
+    },
+    {
+      name: 'get_top_strategies_by_apy',
+      description: 'Get strategies with the highest APY',
+      input_schema: {
+        type: 'object',
+        properties: {
+          limit: {
+            type: 'number',
+            description: 'Number of top strategies to return (default 5)',
+          },
+        },
+        required: [],
+      },
+    },
+    {
       name: 'get_vault_balance',
-      description: 'Get user balance for a specific vault and wallet address',
+      description: 'Get user balance for a specific vault/strategy and wallet address',
       input_schema: {
         type: 'object',
         properties: {
@@ -33,86 +96,58 @@ export class AIService {
             type: 'string',
             description: 'User wallet address (required)',
           },
-          vault_type: {
+          strategy_id: {
             type: 'string',
-            enum: [
-              'vesuEth',
-              'vesuStrk',
-              'vesuUsdc',
-              'vesuUsdt',
-              'ekuboStrkXstrk',
-            ],
             description:
-              'Vault type to check balance for (optional - if not provided, will show available vaults)',
+              'Strategy ID to check balance for (e.g., "vesu_fusion_eth", "hyper_xstrk")',
           },
         },
-        required: ['wallet_address'],
+        required: ['wallet_address', 'strategy_id'],
       },
     },
     {
       name: 'get_vault_yield',
-      description: 'Get current yield information for a specific vault',
+      description: 'Get current yield information for a specific strategy',
       input_schema: {
         type: 'object',
         properties: {
-          vault_type: {
+          strategy_id: {
             type: 'string',
-            enum: [
-              'vesuEth',
-              'vesuStrk',
-              'vesuUsdc',
-              'vesuUsdt',
-              'ekuboStrkXstrk',
-            ],
             description:
-              'Vault type to get yield for (optional - if not provided, will show available vaults)',
+              'Strategy ID to get yield for (e.g., "vesu_fusion_eth", "hyper_xstrk")',
           },
         },
-        required: [],
+        required: ['strategy_id'],
       },
     },
     {
       name: 'get_vault_tvl',
-      description: 'Get total value locked (TVL) for a specific vault',
+      description: 'Get total value locked (TVL) for a specific strategy',
       input_schema: {
         type: 'object',
         properties: {
-          vault_type: {
+          strategy_id: {
             type: 'string',
-            enum: [
-              'vesuEth',
-              'vesuStrk',
-              'vesuUsdc',
-              'vesuUsdt',
-              'ekuboStrkXstrk',
-            ],
             description:
-              'Vault type to get TVL for (optional - if not provided, will show available vaults)',
+              'Strategy ID to get TVL for (e.g., "vesu_fusion_eth", "hyper_xstrk")',
           },
         },
-        required: [],
+        required: ['strategy_id'],
       },
     },
     {
       name: 'get_vault_settings',
-      description: 'Get vault settings including fees and configuration',
+      description: 'Get strategy settings including fees and configuration',
       input_schema: {
         type: 'object',
         properties: {
-          vault_type: {
+          strategy_id: {
             type: 'string',
-            enum: [
-              'vesuEth',
-              'vesuStrk',
-              'vesuUsdc',
-              'vesuUsdt',
-              'ekuboStrkXstrk',
-            ],
             description:
-              'Vault type to get settings for (optional - if not provided, will show available vaults)',
+              'Strategy ID to get settings for (e.g., "vesu_fusion_eth", "hyper_xstrk")',
           },
         },
-        required: [],
+        required: ['strategy_id'],
       },
     },
   ];
@@ -122,6 +157,7 @@ export class AIService {
       apiKey: config.anthropic.apiKey,
     });
     this.contractService = new ContractService();
+    this.strategyService = new StrategyService();
   }
 
   /**
@@ -175,16 +211,26 @@ export class AIService {
 IMPORTANT GUIDELINES:
 - Be brief and direct in responses
 - Include relevant image URLs from the knowledge base when helpful
-- If user asks for balance without providing wallet address, ask for their wallet address
-- If user asks for specific vault data, use the appropriate tools
+- When users ask about strategies, use the strategy tools to fetch live data from the API
+- All strategy information (APY, TVL, contract addresses) is fetched dynamically
+- If user asks for balance, they need to provide both wallet address AND strategy ID
 - For general questions, provide helpful information from the knowledge base
 
-Available Vault Types:
-- vesuEth: Vesu Fusion ETH (vfETH)
-- vesuStrk: Vesu Fusion STRK (vfSTRK) 
-- vesuUsdc: Vesu Fusion USDC (vfUSDC)
-- vesuUsdt: Vesu Fusion USDT (vfUSDT)
-- ekuboStrkXstrk: Ekubo CL xSTRK/STRK concentrated liquidity
+AVAILABLE TOOLS:
+- get_all_strategies: List all available strategies with APY and TVL
+- get_strategy_by_id: Get detailed info about a specific strategy
+- search_strategies_by_token: Find strategies for a specific token (ETH, STRK, USDC, etc.)
+- get_top_strategies_by_apy: Show strategies with highest yields
+- get_vault_balance: Check user balance (requires wallet address + strategy ID)
+- get_vault_yield: Get yield data for a strategy
+- get_vault_tvl: Get TVL for a strategy
+- get_vault_settings: Get settings and fees for a strategy
+
+EXAMPLE STRATEGY IDs:
+- vesu_fusion_eth, vesu_fusion_strk, vesu_fusion_usdc, vesu_fusion_usdt
+- hyper_xstrk, hyper_xtbtc, hyper_xwbtc
+- ekubo_cl_ethusdc, ekubo_cl_strkusdc, ekubo_cl_wbtceth
+- xstrk_sensei, evergreen_strk, evergreen_eth
 
 Knowledge Base: ${this.getTrovesContext()}`;
 
@@ -259,6 +305,14 @@ Knowledge Base: ${this.getTrovesContext()}`;
   ): Promise<{ success: boolean; message: string; data?: any }> {
     try {
       switch (toolName) {
+        case 'get_all_strategies':
+          return await this.getAllStrategies(parameters);
+        case 'get_strategy_by_id':
+          return await this.getStrategyById(parameters);
+        case 'search_strategies_by_token':
+          return await this.searchStrategiesByToken(parameters);
+        case 'get_top_strategies_by_apy':
+          return await this.getTopStrategiesByApy(parameters);
         case 'get_vault_balance':
           return await this.getVaultBalance(parameters);
         case 'get_vault_yield':
@@ -283,14 +337,172 @@ Knowledge Base: ${this.getTrovesContext()}`;
   }
 
   /**
+   * Get all strategies
+   */
+  async getAllStrategies({
+    sort_by,
+    limit = 10,
+  }: {
+    sort_by?: string;
+    limit?: number;
+  }): Promise<{ success: boolean; message: string; data?: any }> {
+    try {
+      let strategies;
+
+      if (sort_by === 'apy') {
+        strategies = await this.strategyService.getTopStrategiesByApy(limit);
+      } else if (sort_by === 'tvl') {
+        strategies = await this.strategyService.getTopStrategiesByTvl(limit);
+      } else {
+        const allStrategies = await this.strategyService.fetchStrategies();
+        strategies = allStrategies.strategies.slice(0, limit);
+      }
+
+      const formattedStrategies = strategies
+        .map(
+          (s, idx) =>
+            `${idx + 1}. ${this.strategyService.formatStrategyInfoShort(s)}`
+        )
+        .join('\n');
+
+      return {
+        success: true,
+        message: `**Available Strategies** (${strategies.length}):\n\n${formattedStrategies}\n\nUse strategy ID to get more details (e.g., "Tell me about ${strategies[0]?.id}")`,
+        data: { strategies, count: strategies.length },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error fetching strategies: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      };
+    }
+  }
+
+  /**
+   * Get strategy by ID
+   */
+  async getStrategyById({
+    strategy_id,
+  }: {
+    strategy_id: string;
+  }): Promise<{ success: boolean; message: string; data?: any }> {
+    try {
+      const strategy = await this.strategyService.getStrategyById(strategy_id);
+
+      if (!strategy) {
+        return {
+          success: false,
+          message: `Strategy with ID '${strategy_id}' not found. Use "show all strategies" to see available options.`,
+        };
+      }
+
+      // Format with full details including methodology
+      const formattedInfo = this.strategyService.formatStrategyInfo(strategy, true);
+
+      // Add contract address info
+      const contractInfo = strategy.contract.length > 0 
+        ? `\n\n**Contract Address:** \`${strategy.contract[0].address}\``
+        : '';
+
+      return {
+        success: true,
+        message: formattedInfo + contractInfo,
+        data: strategy,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error fetching strategy: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      };
+    }
+  }
+
+  /**
+   * Search strategies by token
+   */
+  async searchStrategiesByToken({
+    token_symbol,
+  }: {
+    token_symbol: string;
+  }): Promise<{ success: boolean; message: string; data?: any }> {
+    try {
+      const strategies =
+        await this.strategyService.searchStrategiesByToken(token_symbol);
+
+      if (strategies.length === 0) {
+        return {
+          success: false,
+          message: `No strategies found for token '${token_symbol.toUpperCase()}'. Try tokens like STRK, ETH, USDC, USDT, or WBTC.`,
+        };
+      }
+
+      const formattedStrategies = strategies
+        .map(
+          (s, idx) =>
+            `${idx + 1}. ${this.strategyService.formatStrategyInfoShort(s)}\n   ID: \`${s.id}\``
+        )
+        .join('\n\n');
+
+      return {
+        success: true,
+        message: `**${strategies.length} Strategies with ${token_symbol.toUpperCase()}**:\n\n${formattedStrategies}\n\nAsk "Tell me about [strategy_id]" for full details including APY methodology.`,
+        data: { strategies, count: strategies.length, token: token_symbol.toUpperCase() },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error searching strategies: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      };
+    }
+  }
+
+  /**
+   * Get top strategies by APY
+   */
+  async getTopStrategiesByApy({
+    limit = 5,
+  }: {
+    limit?: number;
+  }): Promise<{ success: boolean; message: string; data?: any }> {
+    try {
+      const strategies = await this.strategyService.getTopStrategiesByApy(limit);
+
+      if (strategies.length === 0) {
+        return {
+          success: false,
+          message: 'No strategies with valid APY data found.',
+        };
+      }
+
+      const formattedStrategies = strategies
+        .map(
+          (s, idx) =>
+            `${idx + 1}. ${this.strategyService.formatStrategyInfoShort(s)}\n   ID: \`${s.id}\``
+        )
+        .join('\n\n');
+
+      return {
+        success: true,
+        message: `**Top ${strategies.length} Strategies by APY**:\n\n${formattedStrategies}\n\nAsk "Tell me about [strategy_id]" for full details including APY methodology.`,
+        data: { strategies, count: strategies.length },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error fetching top APY strategies: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      };
+    }
+  }
+
+  /**
    * Get vault balance for a specific wallet address
    */
   async getVaultBalance({
     wallet_address,
-    vault_type,
+    strategy_id,
   }: {
     wallet_address: string;
-    vault_type?: string;
+    strategy_id: string;
   }): Promise<{ success: boolean; message: string; data?: any }> {
     try {
       if (!wallet_address) {
@@ -300,41 +512,35 @@ Knowledge Base: ${this.getTrovesContext()}`;
         };
       }
 
-      const availableVaults = this.contractService.getAvailableVaults();
-
-      // If no vault type specified, show available vaults for user to choose
-      if (!vault_type) {
-        const vaultOptions = availableVaults
-          .map(vault => {
-            const vaultInfo = this.getVaultInfo(vault);
-            return `• **${vault}** - ${vaultInfo.name}`;
-          })
-          .join('\n');
-
+      if (!strategy_id) {
         return {
           success: false,
-          message: `Please specify which vault you'd like to check the balance for:\n\n${vaultOptions}\n\nExample: "check balance for vesuEth" or "get balance for ekuboStrkXstrk"`,
+          message: 'Strategy ID is required to check balance.',
         };
       }
 
-      if (!availableVaults.includes(vault_type as any)) {
+      // Fetch strategy details
+      const strategy = await this.strategyService.getStrategyById(strategy_id);
+      
+      if (!strategy) {
         return {
           success: false,
-          message: `Invalid vault type: ${vault_type}. Available vaults: ${availableVaults.join(', ')}`,
+          message: `Strategy '${strategy_id}' not found.`,
         };
       }
 
       const balance = await this.contractService.getUserBalance(
         wallet_address,
-        vault_type as any
+        strategy_id
       );
-      const vaultInfo = this.getVaultInfo(vault_type);
-      const formattedBalance = this.formatBalance(balance, vault_type);
+      
+      const decimals = strategy.depositToken[0]?.decimals || 18;
+      const formattedBalance = this.formatBalanceWithDecimals(balance, decimals);
 
       return {
         success: true,
-        message: `💰 **Your ${vaultInfo.name} Balance:**\n\`${formattedBalance}\`\n\n📍 Address: \`${wallet_address}\``,
-        data: { balance, formattedBalance, vault_type, wallet_address },
+        message: `**Your ${strategy.name} Balance:**\n${formattedBalance}\n\nAddress: ${wallet_address}`,
+        data: { balance, formattedBalance, strategy_id, wallet_address, strategy },
       };
     } catch (error) {
       return {
@@ -348,44 +554,48 @@ Knowledge Base: ${this.getTrovesContext()}`;
    * Get vault yield information
    */
   async getVaultYield({
-    vault_type,
+    strategy_id,
   }: {
-    vault_type: string;
+    strategy_id: string;
   }): Promise<{ success: boolean; message: string; data?: any }> {
     try {
-      const availableVaults = this.contractService.getAvailableVaults();
-
-      // If no vault type specified, show available vaults for user to choose
-      if (!vault_type) {
-        const vaultOptions = availableVaults
-          .map(vault => {
-            const vaultInfo = this.getVaultInfo(vault);
-            return `• **${vault}** - ${vaultInfo.name}`;
-          })
-          .join('\n');
-
+      if (!strategy_id) {
         return {
           success: false,
-          message: `Please specify which vault you'd like to check the yield for:\n\n${vaultOptions}\n\nExample: "get yield for vesuEth" or "show yield for ekuboStrkXstrk"`,
+          message: 'Strategy ID is required to check yield.',
         };
       }
 
-      if (!availableVaults.includes(vault_type as any)) {
+      // Fetch strategy details
+      const strategy = await this.strategyService.getStrategyById(strategy_id);
+      
+      if (!strategy) {
         return {
           success: false,
-          message: `Invalid vault type: ${vault_type}. Available vaults: ${availableVaults.join(', ')}`,
+          message: `Strategy '${strategy_id}' not found.`,
         };
       }
 
-      const yieldData = await this.contractService.computeYield(
-        vault_type as any
-      );
-      const vaultInfo = this.getVaultInfo(vault_type);
+      const yieldData = await this.contractService.computeYield(strategy_id);
+
+      let message = `**${strategy.name} Yield Information:**\n\n`;
+      message += `- Current APY: ${this.strategyService.formatApy(strategy.apy)}\n`;
+      
+      if (strategy.apySplit.baseApy !== null) {
+        message += `- Base APY: ${this.strategyService.formatApy(strategy.apySplit.baseApy)}\n`;
+      }
+      if (strategy.apySplit.rewardsApy > 0) {
+        message += `- Rewards APY: ${this.strategyService.formatApy(strategy.apySplit.rewardsApy)}\n`;
+      }
+      
+      message += `- Yield Before: ${yieldData.yieldBefore}\n`;
+      message += `- Yield After: ${yieldData.yieldAfter}\n`;
+      message += `\n**APY Methodology:**\n${strategy.apyMethodology}`;
 
       return {
         success: true,
-        message: `📈 **${vaultInfo.name} Yield:**\n\n• **Before:** ${yieldData.yieldBefore}\n• **After:** ${yieldData.yieldAfter}\n\n${vaultInfo.description}`,
-        data: { ...yieldData, vault_type },
+        message,
+        data: { ...yieldData, strategy_id, strategy },
       };
     } catch (error) {
       return {
@@ -399,44 +609,41 @@ Knowledge Base: ${this.getTrovesContext()}`;
    * Get vault TVL (Total Value Locked)
    */
   async getVaultTVL({
-    vault_type,
+    strategy_id,
   }: {
-    vault_type: string;
+    strategy_id: string;
   }): Promise<{ success: boolean; message: string; data?: any }> {
     try {
-      const availableVaults = this.contractService.getAvailableVaults();
-
-      // If no vault type specified, show available vaults for user to choose
-      if (!vault_type) {
-        const vaultOptions = availableVaults
-          .map(vault => {
-            const vaultInfo = this.getVaultInfo(vault);
-            return `• **${vault}** - ${vaultInfo.name}`;
-          })
-          .join('\n');
-
+      if (!strategy_id) {
         return {
           success: false,
-          message: `Please specify which vault you'd like to check the TVL for:\n\n${vaultOptions}\n\nExample: "get TVL for vesuEth" or "show TVL for ekuboStrkXstrk"`,
+          message: 'Strategy ID is required to check TVL.',
         };
       }
 
-      if (!availableVaults.includes(vault_type as any)) {
+      // Fetch strategy details
+      const strategy = await this.strategyService.getStrategyById(strategy_id);
+      
+      if (!strategy) {
         return {
           success: false,
-          message: `Invalid vault type: ${vault_type}. Available vaults: ${availableVaults.join(', ')}`,
+          message: `Strategy '${strategy_id}' not found.`,
         };
       }
 
-      const totalAssets = await this.contractService.getTotalAssets(
-        vault_type as any
-      );
-      const vaultInfo = this.getVaultInfo(vault_type);
+      const totalAssets = await this.contractService.getTotalAssets(strategy_id);
+
+      let message = `**${strategy.name} TVL Information:**\n\n`;
+      message += `- USD Value: ${this.strategyService.formatTvl(strategy.tvlUsd)}\n`;
+      message += `- On-chain Total Assets: ${totalAssets}\n`;
+      message += `- Tokens: ${strategy.depositToken.map(t => t.symbol).join(', ')}\n`;
+      message += `- APY: ${this.strategyService.formatApy(strategy.apy)}\n`;
+      message += `- Status: ${strategy.status.value}`;
 
       return {
         success: true,
-        message: `🏦 **${vaultInfo.name} TVL:**\n\`${totalAssets}\`\n\n${vaultInfo.description}`,
-        data: { totalAssets, vault_type },
+        message,
+        data: { totalAssets, tvlUsd: strategy.tvlUsd, strategy_id, strategy },
       };
     } catch (error) {
       return {
@@ -450,44 +657,53 @@ Knowledge Base: ${this.getTrovesContext()}`;
    * Get vault settings
    */
   async getVaultSettings({
-    vault_type,
+    strategy_id,
   }: {
-    vault_type: string;
+    strategy_id: string;
   }): Promise<{ success: boolean; message: string; data?: any }> {
     try {
-      const availableVaults = this.contractService.getAvailableVaults();
-
-      // If no vault type specified, show available vaults for user to choose
-      if (!vault_type) {
-        const vaultOptions = availableVaults
-          .map(vault => {
-            const vaultInfo = this.getVaultInfo(vault);
-            return `• **${vault}** - ${vaultInfo.name}`;
-          })
-          .join('\n');
-
+      if (!strategy_id) {
         return {
           success: false,
-          message: `Please specify which vault you'd like to check the settings for:\n\n${vaultOptions}\n\nExample: "get settings for vesuEth" or "show settings for ekuboStrkXstrk"`,
+          message: 'Strategy ID is required to check settings.',
         };
       }
 
-      if (!availableVaults.includes(vault_type as any)) {
+      // Fetch strategy details
+      const strategy = await this.strategyService.getStrategyById(strategy_id);
+      
+      if (!strategy) {
         return {
           success: false,
-          message: `Invalid vault type: ${vault_type}. Available vaults: ${availableVaults.join(', ')}`,
+          message: `Strategy '${strategy_id}' not found.`,
         };
       }
 
-      const settings = await this.contractService.getSettings(
-        vault_type as any
-      );
-      const vaultInfo = this.getVaultInfo(vault_type);
+      const settings = await this.contractService.getSettings(strategy_id);
+
+      let message = `**${strategy.name} Settings:**\n\n`;
+      message += `- Performance Fee: ${settings.feeBps / 100}%\n`;
+      message += `- Default Pool Index: ${settings.defaultPoolIndex}\n`;
+      message += `- Fee Receiver: ${settings.feeReceiver}\n`;
+      message += `- Leverage: ${strategy.leverage}x\n`;
+      message += `- Risk Factor: ${strategy.riskFactor}\n`;
+      message += `- Audit Status: ${strategy.isAudited ? 'Audited' : 'Not Audited'}\n`;
+      
+      if (strategy.auditUrl) {
+        message += `- Audit Report: ${strategy.auditUrl}\n`;
+      }
+      
+      message += `- Status: ${strategy.status.value}\n`;
+      message += `- Contract: ${strategy.contract[0]?.address || 'N/A'}`;
+
+      if (strategy.curator) {
+        message += `\n\n**Curated by:** ${strategy.curator.name}`;
+      }
 
       return {
         success: true,
-        message: `⚙️ **${vaultInfo.name} Settings:**\n\n• **Fee:** ${settings.feeBps / 100}%\n• **Default Pool Index:** ${settings.defaultPoolIndex}\n• **Fee Receiver:** \`${settings.feeReceiver}\``,
-        data: { ...settings, vault_type },
+        message,
+        data: { ...settings, strategy_id, strategy },
       };
     } catch (error) {
       return {
@@ -533,72 +749,17 @@ Troves is a yield aggregator on Starknet that maximizes returns through automate
     return [...new Set(urls)]; // Remove duplicates
   }
 
-  /**
-   * Get vault information for a specific vault type
-   */
-  private getVaultInfo(vaultType: string): {
-    name: string;
-    description: string;
-  } {
-    const vaultInfoMap: Record<string, { name: string; description: string }> =
-      {
-        vesuEth: {
-          name: 'Vesu Fusion ETH (vfETH)',
-          description:
-            'Rebalancing vault that supplies ETH to multiple Vesu pools for optimized yield. Uses Vesu lending protocol with automated rebalancing across verified pools.',
-        },
-        vesuStrk: {
-          name: 'Vesu Fusion STRK (vfSTRK)',
-          description:
-            'Rebalancing vault that supplies STRK to multiple Vesu pools for optimized yield. Uses Vesu lending protocol with automated rebalancing across verified pools.',
-        },
-        vesuUsdc: {
-          name: 'Vesu Fusion USDC (vfUSDC)',
-          description:
-            'Rebalancing vault that supplies USDC to multiple Vesu pools for optimized yield. Uses Vesu lending protocol with automated rebalancing across verified pools.',
-        },
-        vesuUsdt: {
-          name: 'Vesu Fusion USDT (vfUSDT)',
-          description:
-            'Rebalancing vault that supplies USDT to multiple Vesu pools for optimized yield. Uses Vesu lending protocol with automated rebalancing across verified pools.',
-        },
-        ekuboStrkXstrk: {
-          name: 'Ekubo CL xSTRK/STRK',
-          description:
-            'Concentrated liquidity vault for xSTRK/STRK pair on Ekubo. Automatically manages LP positions within optimal price ranges and reinvests trading fees.',
-        },
-      };
-
-    return (
-      vaultInfoMap[vaultType] || {
-        name: 'Unknown Vault',
-        description: 'Vault information not available',
-      }
-    );
-  }
 
   /**
-   * Format balance for display based on vault type
+   * Format balance for display with specific decimals
    */
-  private formatBalance(balance: string, vaultType: string): string {
+  private formatBalanceWithDecimals(balance: string, decimals: number): string {
     const balanceNum = BigInt(balance);
-
-    // Define decimals for each token type
-    const decimals: Record<string, number> = {
-      vesuEth: 18, // ETH has 18 decimals
-      vesuStrk: 18, // STRK has 18 decimals
-      vesuUsdc: 6, // USDC has 6 decimals
-      vesuUsdt: 6, // USDT has 6 decimals
-      ekuboStrkXstrk: 18, // STRK has 18 decimals
-    };
-
-    const decimal = decimals[vaultType] || 18;
-
-    const divisor = BigInt(10 ** decimal);
+    const divisor = BigInt(10 ** decimals);
     const wholePart = balanceNum / divisor;
     const fractionalPart = balanceNum % divisor;
 
-    const fractionalStr = fractionalPart.toString().padStart(decimal, '0');
+    const fractionalStr = fractionalPart.toString().padStart(decimals, '0');
     const trimmedFractional = fractionalStr.replace(/0+$/, '');
 
     if (trimmedFractional === '') {
@@ -615,38 +776,38 @@ Troves is a yield aggregator on Starknet that maximizes returns through automate
    */
   async getHelpMessage(): Promise<string> {
     return `
-🤖 **Troves.fi AI Assistant**
+**Troves.fi AI Assistant**
 
 I can help you with:
 
-📊 **Contract Data Queries:**
-• Current yield and TVL for specific vaults
-• Available pools and strategies  
-• Fee information
-• Total supply and assets
-• User balances (with address)
+**Contract Data Queries:**
+- Current yield and TVL for specific vaults
+- Available pools and strategies  
+- Fee information
+- Total supply and assets
+- User balances (with address)
 
-🏦 **Available Vaults:**
-• Vesu Fusion: vfETH, vfSTRK, vfUSDC, vfUSDT
-• Ekubo CL: xSTRK/STRK concentrated liquidity
-• Sensei: Delta neutral lending strategies
+**Available Vaults:**
+- Vesu Fusion: vfETH, vfSTRK, vfUSDC, vfUSDT
+- Ekubo CL: xSTRK/STRK concentrated liquidity
+- Sensei: Delta neutral lending strategies
 
-💡 **General Information:**
-• What is Troves.fi?
-• How yield farming works
-• Starknet ecosystem info
-• Getting started guide
-• NFT levels system
-• Referral program
+**General Information:**
+- What is Troves.fi?
+- How yield farming works
+- Starknet ecosystem info
+- Getting started guide
+- NFT levels system
+- Referral program
 
-🔍 **Examples:**
-• "What's the yield on Vesu ETH vault?"
-• "Show me TVL for vfSTRK"
-• "How do I deposit to a strategy?"
-• "What is the NFT levels system?"
-• "What are the fees?"
+**Examples:**
+- "What's the yield on Vesu ETH vault?"
+- "Show me TVL for vfSTRK"
+- "How do I deposit to a strategy?"
+- "What is the NFT levels system?"
+- "What are the fees?"
 
-Just ask me anything in natural language! 🚀
+Just ask me anything in natural language!
 `;
   }
 

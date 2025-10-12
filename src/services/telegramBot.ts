@@ -24,35 +24,34 @@ export class TelegramBotService implements MessagingPlatform {
   private setupHandlers(): void {
     this.bot.onText(/\/start/, msg => {
       const chatId = msg.chat.id;
-      const welcomeMessage = `
-🚀 **Welcome to Troves.fi AI Assistant!**
+      const welcomeMessage = `Welcome to Troves.fi AI Assistant!
 
 I'm here to help you with everything about Troves.fi, the yield aggregator on Starknet.
 
-💡 **What I can do:**
-• Answer questions about Troves.fi
-• Provide real-time contract data
-• Explain yield farming strategies
-• Help with Starknet ecosystem
+What I can do:
+- Answer questions about Troves.fi
+- Provide real-time contract data
+- Explain yield farming strategies
+- Help with Starknet ecosystem
 
-🔍 **Just ask me anything in natural language!**
+Just ask me anything in natural language!
 
 Examples:
-• "What's the current yield?"
-• "How do I get started?"
-• "What pools are available?"
+- "What's the current yield?"
+- "How do I get started?"
+- "What pools are available?"
 
-Use /help for more information.
-      `;
+Use /help for more information.`;
 
-      this.bot.sendMessage(chatId, welcomeMessage, { parse_mode: 'Markdown' });
+      this.bot.sendMessage(chatId, welcomeMessage);
     });
 
     this.bot.onText(/\/help/, async msg => {
       const chatId = msg.chat.id;
       try {
         const helpMessage = await this.aiService.getHelpMessage();
-        this.bot.sendMessage(chatId, helpMessage, { parse_mode: 'Markdown' });
+        const sanitizedHelp = this.sanitizeForTelegram(helpMessage);
+        this.bot.sendMessage(chatId, sanitizedHelp);
       } catch (error) {
         console.error('Error getting help message:', error);
         this.bot.sendMessage(
@@ -67,11 +66,11 @@ Use /help for more information.
       try {
         await this.bot.sendMessage(
           chatId,
-          '🔄 Fetching contract status for all vaults...'
+          'Fetching contract status for all vaults...'
         );
 
         const availableVaults = this.contractService.getAvailableVaults();
-        let statusMessage = '📊 **Troves.fi Contract Status**\n\n';
+        let statusMessage = 'Troves.fi Contract Status\n\n';
 
         for (const vaultType of availableVaults) {
           try {
@@ -79,31 +78,31 @@ Use /help for more information.
               await this.contractService.getContractData(vaultType);
             const vaultInfo = this.getVaultInfo(vaultType);
 
-            statusMessage += `🏦 **${vaultInfo.name}**\n`;
-            statusMessage += `💰 TVL: ${this.formatNumber(
+            statusMessage += `${vaultInfo.name}\n`;
+            statusMessage += `TVL: ${this.formatNumber(
               contractData.totalAssets
             )}\n`;
-            statusMessage += `🔄 Supply: ${this.formatNumber(
+            statusMessage += `Supply: ${this.formatNumber(
               await this.contractService.getTotalSupply(vaultType)
             )}\n`;
-            statusMessage += `⚙️ Fee: ${contractData.settings.feeBps} BPS\n`;
-            statusMessage += `🏊 Pools: ${contractData.allowedPools.length}\n\n`;
+            statusMessage += `Fee: ${contractData.settings.feeBps} BPS\n`;
+            statusMessage += `Pools: ${contractData.allowedPools.length}\n\n`;
           } catch (error) {
             console.error(`Error getting data for ${vaultType}:`, error);
-            statusMessage += `❌ Error fetching data for ${vaultType}\n\n`;
+            statusMessage += `Error fetching data for ${vaultType}\n\n`;
           }
         }
 
-        statusMessage += `🌐 **Network:** ${
+        statusMessage += `Network: ${
           config.nodeEnv === 'development' ? 'Sepolia Testnet' : 'Mainnet'
         }`;
 
-        this.bot.sendMessage(chatId, statusMessage, { parse_mode: 'Markdown' });
+        this.bot.sendMessage(chatId, statusMessage);
       } catch (error) {
         console.error('Error getting status:', error);
         this.bot.sendMessage(
           chatId,
-          '❌ Error fetching contract status. Please try again.'
+          'Error fetching contract status. Please try again.'
         );
       }
     });
@@ -125,7 +124,7 @@ Use /help for more information.
       const vaultType = parts[1];
 
       try {
-        await this.bot.sendMessage(chatId, '🔄 Fetching balance...');
+        await this.bot.sendMessage(chatId, 'Fetching balance...');
 
         if (vaultType) {
           // Get balance for specific vault
@@ -145,24 +144,20 @@ Use /help for more information.
           const percentage =
             (BigInt(balance) * BigInt(10000)) / BigInt(totalSupply);
 
-          const balanceMessage = `
-💰 **Balance Information - ${vaultInfo.name}**
+          const balanceMessage = `Balance Information - ${vaultInfo.name}
 
-👤 **Address:** \`${userAddress}\`
-💎 **Balance:** ${this.formatNumber(balance)} tokens
-📊 **% of Total Supply:** ${(Number(percentage) / 100).toFixed(4)}%
+Address: ${userAddress}
+Balance: ${this.formatNumber(balance)} tokens
+% of Total Supply: ${(Number(percentage) / 100).toFixed(4)}%
 
-📈 **Portfolio Value:**
-• Total Assets in Vault: ${this.formatNumber(totalAssets)}
-• Your Share: ${this.formatNumber(balance)} tokens
-          `;
+Portfolio Value:
+- Total Assets in Vault: ${this.formatNumber(totalAssets)}
+- Your Share: ${this.formatNumber(balance)} tokens`;
 
-          this.bot.sendMessage(chatId, balanceMessage, {
-            parse_mode: 'Markdown',
-          });
+          this.bot.sendMessage(chatId, balanceMessage);
         } else {
           const availableVaults = this.contractService.getAvailableVaults();
-          let balanceMessage = `💰 **Balance Information**\n\n👤 **Address:** \`${userAddress}\`\n\n`;
+          let balanceMessage = `Balance Information\n\nAddress: ${userAddress}\n\n`;
 
           for (const vault of availableVaults) {
             try {
@@ -173,8 +168,8 @@ Use /help for more information.
               const vaultInfo = this.getVaultInfo(vault);
 
               if (BigInt(balance) > 0) {
-                balanceMessage += `🏦 **${vaultInfo.name}**\n`;
-                balanceMessage += `💎 Balance: ${this.formatNumber(
+                balanceMessage += `${vaultInfo.name}\n`;
+                balanceMessage += `Balance: ${this.formatNumber(
                   balance
                 )} tokens\n\n`;
               }
@@ -183,15 +178,13 @@ Use /help for more information.
             }
           }
 
-          this.bot.sendMessage(chatId, balanceMessage, {
-            parse_mode: 'Markdown',
-          });
+          this.bot.sendMessage(chatId, balanceMessage);
         }
       } catch (error) {
         console.error('Error getting balance:', error);
         this.bot.sendMessage(
           chatId,
-          '❌ Error fetching balance. Please check the address and try again.'
+          'Error fetching balance. Please check the address and try again.'
         );
       }
     });
@@ -210,8 +203,10 @@ Use /help for more information.
         const userId = msg.from?.id?.toString() || 'anonymous';
         const response = await this.aiService.processQuery(userMessage, userId);
 
-        await this.bot.sendMessage(chatId, response.message, {
-          parse_mode: 'Markdown',
+        // Sanitize message to remove markdown formatting
+        const sanitizedMessage = this.sanitizeForTelegram(response.message);
+
+        await this.bot.sendMessage(chatId, sanitizedMessage, {
           disable_web_page_preview: true,
         });
 
@@ -219,14 +214,13 @@ Use /help for more information.
           for (const imageUrl of response.imageUrls) {
             try {
               await this.bot.sendPhoto(chatId, imageUrl, {
-                caption: '📸 Visual Guide',
-                parse_mode: 'Markdown',
+                caption: 'Visual Guide',
               });
             } catch (error) {
               console.error('Error sending image:', error);
               await this.bot.sendMessage(
                 chatId,
-                `📸 Visual Guide: ${imageUrl}`
+                `Visual Guide: ${imageUrl}`
               );
             }
           }
@@ -235,7 +229,7 @@ Use /help for more information.
         console.error('Error processing message:', error);
         this.bot.sendMessage(
           chatId,
-          '❌ Sorry, I encountered an error processing your message. Please try again.'
+          'Sorry, I encountered an error processing your message. Please try again.'
         );
       }
     });
@@ -308,6 +302,26 @@ Use /help for more information.
   }
 
   /**
+   * Sanitize message for Telegram to avoid Markdown parsing errors
+   * Removes markdown formatting since we're no longer using emojis
+   */
+  private sanitizeForTelegram(message: string): string {
+    // Remove bold markdown (**text** -> text)
+    let sanitized = message.replace(/\*\*(.*?)\*\*/g, '$1');
+    
+    // Remove italic markdown (_text_ -> text)
+    sanitized = sanitized.replace(/_(.*?)_/g, '$1');
+    
+    // Remove code blocks (```text``` -> text)
+    sanitized = sanitized.replace(/```(.*?)```/gs, '$1');
+    
+    // Remove inline code (`text` -> text) but keep contract addresses readable
+    sanitized = sanitized.replace(/`([^`]+)`/g, '$1');
+    
+    return sanitized;
+  }
+
+  /**
    * Start the bot
    */
   start(): void {
@@ -344,8 +358,8 @@ Use /help for more information.
     options?: any
   ): Promise<void> {
     try {
-      await this.bot.sendMessage(chatId, message, {
-        parse_mode: 'Markdown',
+      const sanitizedMessage = this.sanitizeForTelegram(message);
+      await this.bot.sendMessage(chatId, sanitizedMessage, {
         ...options,
       });
     } catch (error) {
@@ -362,14 +376,14 @@ Use /help for more information.
     caption?: string
   ): Promise<void> {
     try {
+      const sanitizedCaption = caption ? this.sanitizeForTelegram(caption) : undefined;
       await this.bot.sendPhoto(chatId, photoUrl, {
-        caption,
-        parse_mode: 'Markdown',
+        caption: sanitizedCaption,
       });
     } catch (error) {
       console.error('Error sending photo:', error);
       // Fallback to sending URL as text
-      await this.sendMessage(chatId, `📸 ${caption || 'Image'}: ${photoUrl}`);
+      await this.sendMessage(chatId, `${caption || 'Image'}: ${photoUrl}`);
     }
   }
 

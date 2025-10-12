@@ -12,10 +12,12 @@
 import { Router, Request, Response } from 'express';
 import { ContractService } from '../services/contractService';
 import { AIService } from '../services/aiService';
+import { StrategyService } from '../services/strategyService';
 
 const router = Router();
 const contractService = new ContractService();
 const aiService = new AIService();
+const strategyService = new StrategyService();
 
 /**
  * @swagger
@@ -520,6 +522,269 @@ router.get('/convert/assets', async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: 'Failed to convert shares to assets',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/troves/strategies:
+ *   get:
+ *     summary: Get all available strategies
+ *     description: Retrieves all yield strategies from Troves.fi with their APY, TVL, and other details
+ *     tags: [Troves]
+ *     parameters:
+ *       - in: query
+ *         name: refresh
+ *         required: false
+ *         description: Force refresh the cache
+ *         schema:
+ *           type: boolean
+ *           example: false
+ *     responses:
+ *       200:
+ *         description: Successful response with strategies list
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     strategies:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                     count:
+ *                       type: number
+ *                     lastUpdated:
+ *                       type: string
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.get('/strategies', async (req: Request, res: Response) => {
+  try {
+    const forceRefresh = req.query.refresh === 'true';
+    const strategiesData = await strategyService.fetchStrategies(forceRefresh);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        strategies: strategiesData.strategies,
+        count: strategiesData.strategies.length,
+        lastUpdated: strategiesData.lastUpdated,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Error fetching strategies:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch strategies',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/troves/strategies/{id}:
+ *   get:
+ *     summary: Get a specific strategy by ID
+ *     description: Fetches all strategies from Troves.fi API and filters by the specified ID (case-insensitive)
+ *     tags: [Troves]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Strategy ID (e.g., "vesu_fusion_eth", "hyper_xstrk")
+ *         schema:
+ *           type: string
+ *           example: "vesu_fusion_eth"
+ *     responses:
+ *       200:
+ *         description: Successful response with complete strategy details including APY, methodology, etc.
+ *       404:
+ *         description: Strategy not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/strategies/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    // Note: getStrategyById fetches all strategies and filters by ID
+    // No separate endpoint exists for single strategy lookup
+    const strategy = await strategyService.getStrategyById(id);
+
+    if (!strategy) {
+      return res.status(404).json({
+        success: false,
+        message: `Strategy with ID '${id}' not found`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: strategy,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Error fetching strategy:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch strategy',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/troves/strategies/search/token:
+ *   get:
+ *     summary: Search strategies by token
+ *     description: Find all strategies that support a specific token
+ *     tags: [Troves]
+ *     parameters:
+ *       - in: query
+ *         name: symbol
+ *         required: true
+ *         description: Token symbol to search for
+ *         schema:
+ *           type: string
+ *           example: "STRK"
+ *     responses:
+ *       200:
+ *         description: Successful response with matching strategies
+ *       400:
+ *         description: Token symbol is required
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/strategies/search/token', async (req: Request, res: Response) => {
+  try {
+    const { symbol } = req.query;
+
+    if (!symbol || typeof symbol !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Token symbol is required',
+      });
+    }
+
+    const strategies = await strategyService.searchStrategiesByToken(symbol);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        strategies,
+        count: strategies.length,
+        searchTerm: symbol,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Error searching strategies:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to search strategies',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/troves/strategies/top/apy:
+ *   get:
+ *     summary: Get top strategies by APY
+ *     description: Retrieves strategies sorted by highest APY
+ *     tags: [Troves]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Number of strategies to return
+ *         schema:
+ *           type: number
+ *           example: 10
+ *     responses:
+ *       200:
+ *         description: Successful response with top APY strategies
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/strategies/top/apy', async (req: Request, res: Response) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 10;
+    const strategies = await strategyService.getTopStrategiesByApy(limit);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        strategies,
+        count: strategies.length,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Error fetching top APY strategies:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch top APY strategies',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/troves/strategies/top/tvl:
+ *   get:
+ *     summary: Get top strategies by TVL
+ *     description: Retrieves strategies sorted by highest TVL
+ *     tags: [Troves]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Number of strategies to return
+ *         schema:
+ *           type: number
+ *           example: 10
+ *     responses:
+ *       200:
+ *         description: Successful response with top TVL strategies
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/strategies/top/tvl', async (req: Request, res: Response) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 10;
+    const strategies = await strategyService.getTopStrategiesByTvl(limit);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        strategies,
+        count: strategies.length,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Error fetching top TVL strategies:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch top TVL strategies',
       error: error instanceof Error ? error.message : 'Unknown error',
     });
   }

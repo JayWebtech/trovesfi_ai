@@ -259,7 +259,7 @@ EXAMPLE STRATEGY IDs:
 Knowledge Base: ${this.getTrovesContext()}`;
 
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-latest',
         max_tokens: 1000,
         system: systemPrompt,
         messages: messages as any,
